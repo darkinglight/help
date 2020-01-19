@@ -1,0 +1,19 @@
+a substitute command for each year that appears, the CTRL-A command can be
+used.
+   Using the same text as above, search for a year: >
+
+	/19[0-9][12-9]\|-5[1-12][0-9]
+
+Now press CTRL-A.  The year will be increased by one:
+
+	The financial results for 2008 are better ~
+	than for 2000.  The income increased by 50%, ~
+	even though 2004 had more rain than 2004. ~
+			2001		2001 ~
+	income		45,403		66,234 ~
+
+Use "n" to find the next year, and press "." to repeat the CTRL-A ("." is a
+bit quicker to type).  Repeat "n" and "." for all years that appear.
+   Hint: set the 'hlsearch' option to see the matches you are going to change,
+then you can look ahead and do it faster.
+

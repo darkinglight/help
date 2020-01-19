@@ -1,0 +1,40 @@
+苹果生成逻辑
+苹果采摘逻辑
+消耗品购买逻辑
+消耗品装包逻辑
+小鹿旅行逻辑
+奖品发放逻辑
+
+
+
+
+admin：
+1. 果树配置
+2. 小鹿行为配置
+3. 明信片几率配置
+4. 礼品配置
+
+mvn clean deploy -pl qlive-live-provider -am
+mvn clean deploy -pl qlive-im-provider -am
+mvn clean deploy -pl qlive-image-provider -am
+
+
+年度活动二期
+1. 云配添加活动配置
+2. hawk线上定榜job配置
+3. activity_job发布
+
+新年活动上线：
+1. mysql 数据表添加 done
+2. vip卡code导入 done
+3. value-added 删除snapshot deploy done
+4. activity删除snaphot  done
+5. 发布value-added, activity-job, activity-server，edge-server
+6. room云配开关开启，  金鼠礼物id修改
+7. 线上添加job
+
+valentine
+1. mysql update ,import vip card batch=2
+2. dubbo�ֿ����ͣ�qlive_im, qlive_user,
+3. activity-job, activity-server, qlive-im, qlive_user, qlive_edge_java��������
+4. Ԥ����job�е�����

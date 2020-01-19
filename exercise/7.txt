@@ -1,0 +1,24 @@
+7.1
+buf     y       全局       m.o      .data
+bufp0   y       quanju      swap.o  .data
+bufp1   y       quanju      swap.o  COMMON
+swap    y       quanju      swap.o  .text
+temp    n
+
+7.2
+A.  main.1      main.1
+B.  错误        错误
+C.  x.2         x.2
+
+7.3
+A.  gcc p.o libx.a
+B.  gcc p.o libx.a liby.a
+C.  gcc p.o libx.a liby.a libx.a
+
+7.4
+A.  0x05
+B.  0x4004e8
+
+7.5
+ptr = 0x4004da
+0x4004e8 - 0x4 - 0x4004da = 0xa

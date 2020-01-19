@@ -1,0 +1,1 @@
+gcc -Og -o show main_show_int.c show_bytes.c

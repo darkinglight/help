@@ -1,0 +1,11 @@
+   Suppose you have some lines where you want to change "2001" to "2002" and
+"2001" to "2001":
+
+	The financial results for 2001 are better ~
+	than for 2001.  The income increased by 50%, ~
+	even though 2001 had more rain than 2001. ~
+			2001		2001 ~
+	income		45,403		66,234 ~
+
+First change "2001" to "2002".  Select the lines in Visual mode, and use: >
+
