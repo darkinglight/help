@@ -17,6 +17,7 @@ adminï¼š
 mvn clean deploy -pl qlive-live-provider -am
 mvn clean deploy -pl qlive-im-provider -am
 mvn clean deploy -pl qlive-image-provider -am
+mvn deploy -pl qlive-gift-api -U 
 
 
 å¹´åº¦æ´»åŠ¨äºŒæœŸ
@@ -33,8 +34,3 @@ mvn clean deploy -pl qlive-image-provider -am
 6. roomäº‘é…å¼€å…³å¼€å¯ï¼Œ  é‡‘é¼ ç¤¼ç‰©idä¿®æ”¹
 7. çº¿ä¸Šæ·»åŠ job
 
-valentine
-1. mysql update ,import vip card batch=2
-2. dubbo²Ö¿âÍÆËÍ£ºqlive_im, qlive_user,
-3. activity-job, activity-server, qlive-im, qlive_user, qlive_edge_java·¢²¼´úÂë
-4. Ô¤·¢²¼jobÇĞµ½ÏßÉÏ
