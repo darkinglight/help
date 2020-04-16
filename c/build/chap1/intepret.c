@@ -111,3 +111,80 @@ int maxargs(A_stm s) {
     }
     return num;
 }
+
+struct table {string key, int value, table *next}
+int load(string key, table *t) {
+    while (t != null && t->key != key) {
+        t = t->next;
+    }
+    return t->value;
+}
+table* save(string key, int value, table *t) {
+    table *n = checked_malloc(size(*n));
+    n->key = key;
+    n->value = value;
+    n->next = t;
+    return n;
+}
+
+int interpExp(A_exp e, table *t) {
+    int result;
+    switch (e->kind) {
+        case A_idExp:
+            result = load(e->u.id, t);
+            break;
+        case A_numExp:
+            result = e->u.num;
+            break;
+        case A_opExp:
+            int left = interpExp(e->u.op.left, t);
+            int right = interpExp(e->u.op.right, t);
+            switch (e->u.op.oper) {
+                case A_plus:
+                    result = left + right;
+                    break;
+                case A_minus:
+                    result = left - right;
+                    break;
+                case A_times:
+                    result = left * right;
+                    break;
+                case A_div:
+                    result = left / right;
+                    break;
+            }
+            break;
+        case A_eseqExp:
+            interpStm(e->u.eseq.stm, t);
+            result = interpExp(e->u.eseq.exp, t);
+            break;
+    }
+    return result;
+}
+
+void interpStm(A_stm s, table *t) {
+    switch (s->kind) {
+        case A_compoundStm:
+            interpStm(s->u.compound.stm1, t);
+            interpStm(s->u.compound.stm2, t);
+            break;
+        case A_assignStm:
+            int value = interpExp(s->u.assign.exp, t);
+            save(s->u.assign.id, value, t);
+            break;
+        case A_printStm:
+            A_expList exps = s->u.print.exps;
+            while (exps->kind == A_pairExpList) {
+                int value = interpExp(exps->u.pair.head);
+                printf(value);
+                exps = exps->u.pair.tail;
+            }
+            int value = interpExp(exps->u.last);
+            printf(value);
+            break;
+    }
+}
+
+void interp(A_stm s) {
+    interpStm(s, null);
+}
