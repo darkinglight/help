@@ -104,7 +104,7 @@ int maxargs(A_stm s) {
         num += first + second;
     } else if (s->kind == A_printStm) {
         A_expList list = s->u.print.exps;
-        num = maxargsExpList(list);
+        num = 1 + maxargsExpList(list);
     } else {
         A_exp exp = s->u.assign.exp;
         num = maxargsExp(exp);
