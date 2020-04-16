@@ -69,3 +69,20 @@ A_expList A_LastExpList(A_exp last) {
     l->u.last = last;
     return l;
 }
+
+int maxargs(A_stm s) {
+    int num = 0;
+    if (s->kind == A_compoundStm) {
+        int first = maxargs(s->u.compound.stm1);
+        int second = maxargs(s->u.compound.stm2);
+        num = first > second ? first : second;
+    } else if (s->kind == A_printStm) {
+        A_expList list = s->u.print.exps;
+        num++;
+        while (list->kind == A_pairExpList) {
+            num++;
+            list = list->u.pair.tail;
+        }
+    }
+    return num;
+}

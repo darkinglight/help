@@ -39,3 +39,5 @@ struct A_expList_ {
 };
 A_expList A_PairExpList(A_exp head, A_expList tail);
 A_expList A_LastExpList(A_exp last);
+
+int maxargs(A_stm);
