@@ -34,3 +34,5 @@ mvn deploy -pl qlive-gift-api -U
 6. room云配开关开启，  金鼠礼物id修改
 7. 线上添加job
 
+cod:
+云配，mq配置

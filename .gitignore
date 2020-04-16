@@ -1,1 +1,4 @@
 office/.idea
+**/venv
+**/*.exe
+**/__pycache__
