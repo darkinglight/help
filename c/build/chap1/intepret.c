@@ -70,19 +70,44 @@ A_expList A_LastExpList(A_exp last) {
     return l;
 }
 
+int maxargsExp(A_exp e) {
+    int num = 0;
+    if (e->kind == A_opExp) {
+        int left = maxargsExp(e->u.op.left);
+        int right = maxargsExp(e->u.op.right);
+        num += left + right;
+    } else if (e->kind == A_eseqExp) {
+        int left = maxargs(e->u.eseq.stm);
+        int right = maxargsExp(e->u.eseq.exp);
+        num += left + right;
+    }
+    return num;
+}
+
+int maxargsExpList(A_expList list) {
+    int num = 0;
+    if (list->kind == A_pairExpList) {
+        int first = maxargsExp(list->u.pair.head);
+        int second = maxargsExpList(list->u.pair.tail);
+        num += first + second;
+    } else {
+        num = maxargsExp(list->u.last);
+    }
+    return num;
+}
+
 int maxargs(A_stm s) {
     int num = 0;
     if (s->kind == A_compoundStm) {
         int first = maxargs(s->u.compound.stm1);
         int second = maxargs(s->u.compound.stm2);
-        num = first > second ? first : second;
+        num += first + second;
     } else if (s->kind == A_printStm) {
         A_expList list = s->u.print.exps;
-        num++;
-        while (list->kind == A_pairExpList) {
-            num++;
-            list = list->u.pair.tail;
-        }
+        num = maxargsExpList(list);
+    } else {
+        A_exp exp = s->u.assign.exp;
+        num = maxargsExp(exp);
     }
     return num;
 }

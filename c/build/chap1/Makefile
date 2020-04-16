@@ -1,4 +1,5 @@
-CC=gcc
+# build with debug info
+CC=gcc -g
 
 .PHONY:test
 test: main.o intepret.o util.o

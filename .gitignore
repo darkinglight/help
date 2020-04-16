@@ -2,3 +2,4 @@ office/.idea
 **/venv
 **/*.exe
 **/__pycache__
+**/*.o
