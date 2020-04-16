@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "util.h"
 
 void *checked_malloc(int len) {

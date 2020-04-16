@@ -56,7 +56,7 @@ A_exp A_EseqExp(A_stm stm, A_exp exp) {
 }
 
 A_expList A_PairExpList(A_exp head, A_expList tail) {
-    A_expList l = checked_malloc(sizeof(*e));
+    A_expList l = checked_malloc(sizeof(*l));
     l->kind = A_pairExpList;
     l->u.pair.head = head;
     l->u.pair.tail = tail;
@@ -64,7 +64,7 @@ A_expList A_PairExpList(A_exp head, A_expList tail) {
 }
 
 A_expList A_LastExpList(A_exp last) {
-    A_expList l = checked_malloc(sizeof(*e));
+    A_expList l = checked_malloc(sizeof(*l));
     l->kind = A_lastExpList;
     l->u.last = last;
     return l;
