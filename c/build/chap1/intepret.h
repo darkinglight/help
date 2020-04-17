@@ -47,7 +47,7 @@ struct TABLE {
     table next;
 };
 int load(string key, table t);
-table save(string key, int value, table t);
+void save(string key, int value, table t);
 
 int maxargs(A_stm);
 int interpExp(A_exp e, table t);

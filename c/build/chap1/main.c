@@ -32,5 +32,8 @@ int main(int argc, char **args) {
             );
     int num = maxargs(prog);
     printf("%d\n", num);
+
+    interp(prog);
+
     exit(0);
 }

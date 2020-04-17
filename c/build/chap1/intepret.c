@@ -117,14 +117,18 @@ int load(string key, table t) {
     while (t != NULL && t->key != key) {
         t = t->next;
     }
+    if (t == NULL) {
+        perror("符号表数据缺失");
+        exit(-1);
+    }
     return t->value;
 }
-table save(string key, int value, table t) {
+void save(string key, int value, table t) {
     table n = checked_malloc(sizeof(*n));
     n->key = key;
     n->value = value;
     n->next = t;
-    return n;
+    t = n;
 }
 
 int interpExp(A_exp e, table t) {
