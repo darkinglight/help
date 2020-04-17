@@ -40,6 +40,16 @@ struct A_expList_ {
 A_expList A_PairExpList(A_exp head, A_expList tail);
 A_expList A_LastExpList(A_exp last);
 
-int maxargs(A_stm);
+typedef struct TABLE *table;
+struct TABLE {
+    string key;
+    int value;
+    table next;
+};
+int load(string key, table t);
+table save(string key, int value, table t);
 
+int maxargs(A_stm);
+int interpExp(A_exp e, table t);
+void interpStm(A_stm s, table t);
 void interp(A_stm);
