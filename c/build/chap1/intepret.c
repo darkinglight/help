@@ -112,7 +112,6 @@ int maxargs(A_stm s) {
     }
     return num;
 }
-
 int load(string key, table t) {
     while (t != NULL && t->key != key) {
         t = t->next;
@@ -128,7 +127,7 @@ void save(string key, int value, table t) {
     n->key = key;
     n->value = value;
     n->next = t;
-    t = n;
+    *t = *n;
 }
 
 int interpExp(A_exp e, table t) {
@@ -192,5 +191,6 @@ void interpStm(A_stm s, table t) {
 }
 
 void interp(A_stm s) {
-    interpStm(s, NULL);
+    table t = checked_malloc(sizeof(*t));
+    interpStm(s, t);
 }
