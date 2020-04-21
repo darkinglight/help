@@ -1,9 +1,11 @@
 typedef char *String;
 typedef enum {ID, IF} Type;
 
-typedef item {
+struct table {
     Type type;
     String value;
+    struct table *next;
 };
+struct table *header, *tail;
 
-scan();
+void scan(String);

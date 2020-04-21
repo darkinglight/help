@@ -3,3 +3,4 @@ office/.idea
 **/*.exe
 **/__pycache__
 **/*.o
+**/*.out
