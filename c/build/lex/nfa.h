@@ -9,8 +9,8 @@ struct table {
 struct table *header, *tail;
 
 struct state {
-    char *input;
-    struct state **next;
+    char input[27];
+    struct state *next[27];
     Type type;
 };
 
