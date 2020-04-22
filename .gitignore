@@ -4,3 +4,4 @@ office/.idea
 **/__pycache__
 **/*.o
 **/*.out
+**/test
