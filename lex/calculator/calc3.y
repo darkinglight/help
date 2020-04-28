@@ -35,7 +35,7 @@ int sym[26];
 %%
 
 program:
-       function '.'             { exit(0); }
+       function             { exit(0); }
        ;
 
 function:
@@ -81,7 +81,7 @@ expr:
 nodeType *con(int value) {
     nodeType *p;
 
-    if ((p = malloc(sizeof(conNodeType))))
+    if ((p = malloc(sizeof(conNodeType))) == NULL)
         yyerror("out of memory");
 
     p->type = typeCon;
