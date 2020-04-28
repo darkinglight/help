@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "calc3.h"
-#include "y.tab.h"
+#include "calc3.tab.h"
 
 int ex(nodeType *p) {
     if (!p) return 0;
@@ -30,16 +30,16 @@ int ex(nodeType *p) {
                 case '=':
                     return sym[p->opr.op[0]->id.i] = ex(p->opr.op[1]);
                 case UMINUS:    return -ex(p->opr.op[0]);
-                case '+':       return ex(p->opr.op[0] + p->opr.op[1]);
-                case '-':       return ex(p->opr.op[0] - p->opr.op[1]);
-                case '*':       return ex(p->opr.op[0] * p->opr.op[1]);
-                case '/':       return ex(p->opr.op[0] / p->opr.op[1]);
-                case '<':       return ex(p->opr.op[0] < p->opr.op[1]);
-                case '>':       return ex(p->opr.op[0] > p->opr.op[1]);
-                case GE:        return ex(p->opr.op[0] >= p->opr.op[1]);
-                case LE:        return ex(p->opr.op[0] <= p->opr.op[1]);
-                case NE:        return ex(p->opr.op[0] != p->opr.op[1]);
-                case EQ:        return ex(p->opr.op[0] == p->opr.op[1]);
+                case '+':       return ex(p->opr.op[0]) + ex(p->opr.op[1]);
+                case '-':       return ex(p->opr.op[0]) - ex(p->opr.op[1]);
+                case '*':       return ex(p->opr.op[0]) * ex(p->opr.op[1]);
+                case '/':       return ex(p->opr.op[0]) / ex(p->opr.op[1]);
+                case '<':       return ex(p->opr.op[0]) < ex(p->opr.op[1]);
+                case '>':       return ex(p->opr.op[0]) > ex(p->opr.op[1]);
+                case GE:        return ex(p->opr.op[0]) >= ex( p->opr.op[1]);
+                case LE:        return ex(p->opr.op[0]) <= ex( p->opr.op[1]);
+                case NE:        return ex(p->opr.op[0]) != ex( p->opr.op[1]);
+                case EQ:        return ex(p->opr.op[0]) == ex( p->opr.op[1]);
             }
     }
 }

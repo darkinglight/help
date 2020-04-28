@@ -25,3 +25,4 @@ typedef union nodeTypeTag {
 } nodeType;
 
 extern int sym[26];
+int ex(nodeType *p);
