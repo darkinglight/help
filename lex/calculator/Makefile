@@ -6,6 +6,9 @@ YACC=win_bison
 all: calc3.tab.c calc3.tab.h lex.yy.c
 	${CC} lex.yy.c calc3.tab.c intepreter.c -o cal
 
+compile: calc3.tab.c calc3.tab.h lex.yy.c
+	${CC} lex.yy.c calc3.tab.c compiler.c -o cal
+
 lex.yy.c: calc3.l
 	${LEX} calc3.l
 
