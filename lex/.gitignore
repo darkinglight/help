@@ -1,2 +1,5 @@
 cal
 *.exe
+cal.tab.c
+cal.tab.h
+lex.yy.c

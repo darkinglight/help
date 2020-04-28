@@ -10,3 +10,7 @@ cal.tab.c: cal.y
 
 cal.tab.h: cal.y
 	win_bison -d cal.y
+
+.PHONY=clean
+clean: lex.yy.c
+	rm cal.exe lex.yy.c cal.tab.c cal.tab.h
