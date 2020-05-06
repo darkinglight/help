@@ -1,3 +1,3 @@
-module algorithm
+module darkinglight.com/algorithm
 
-go 1.12
+go 1.14
