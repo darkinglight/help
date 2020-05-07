@@ -11,11 +11,12 @@ func main() {
 
 func kmpSearch(s string, p string) bool {
 	match := partMatch(p)
+    lens := len(s)
 	lenp := len(p)
 	schars := []rune(s)
 	pchars := []rune(p)
 	index := 0 //matched number
-	for i := 0; i < len(schars); i++ {
+	for i := 0; i < lens; i++ {
 		for index >= 0 {
 			if schars[i] == pchars[index] {
 				index++
