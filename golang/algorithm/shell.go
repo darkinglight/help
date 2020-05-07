@@ -12,14 +12,9 @@ func main() {
 
 func sort(datas []int) {
     length := len(datas)
-
     h := 3
-    N := 1
-    for N * h < length {
-        N = N * h
-    }
 
-    for ; N >= 1; N /= h {
+    for N := length / h; N >= 1; N /= h {
         for i := length - 1; i > 0; i-- {
             for j := i - N; j >= 0; j -= N {
                 if datas[j] > datas[i] {
