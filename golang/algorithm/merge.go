@@ -22,15 +22,14 @@ func sort(datas []int, lo int, hi int) {
 }
 
 func merge(datas []int, lo int, mid int, hi int) {
-    length := hi - lo + 1
     backup := make([]int, hi + 1)
-    for i := lo; i < length; i++ {
+    for i := lo; i <= hi; i++ {
         backup[i] = datas[i]
     }
 
     l := lo
     r := mid + 1
-    for i := lo; i < length; i++ {
+    for i := lo; i <= hi; i++ {
         if (l > mid) {
             datas[i] = backup[r]
             r++
