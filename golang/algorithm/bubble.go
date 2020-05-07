@@ -5,20 +5,18 @@ import (
 )
 
 func main() {
-    datas := []int{1, 5, 3, 2, 10, 7, 2, 4, 1, 9, 9, 7}
+    datas := []int{1, 5, 3, 2}
     sort(datas)
     fmt.Println(datas)
 }
 
 func sort(datas []int) {
 	length := len(datas)
-	for i := 0; i < length; i++ {
-		for j := i; j > 0; j-- {
+	for i := 0; i < length-1; i++ {
+		for j := length - 1; j > i; j-- {
 			if datas[j] < datas[j-1] {
 				exchange(datas, j, j-1)
-            } else {
-                break
-            }
+			}
 		}
 	}
 }

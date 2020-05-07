@@ -13,11 +13,13 @@ func main() {
 func sort(datas []int) {
     length := len(datas)
     for i := 0; i < length - 1; i++ {
+        min := i
         for j := i + 1; j < length; j++ {
-            if datas[i] > datas[j] {
-                exchange(datas, i, j)
+            if datas[min] > datas[j] {
+                min = j
             }
         }
+        exchange(datas, i, min)
     }
 }
 
