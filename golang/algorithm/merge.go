@@ -6,7 +6,7 @@ import (
 
 func main() {
     datas := []int{3,7,1,8,2,4,8,3,10,6}
-    sort(datas, 0, len(datas))
+    sort(datas, 0, len(datas) - 1)
     fmt.Println(datas)
 }
 
@@ -22,15 +22,15 @@ func sort(datas []int, lo int, hi int) {
 }
 
 func merge(datas []int, lo int, mid int, hi int) {
-    backup := make([]int, hi - lo + 1)
     length := hi - lo + 1
-    for i := 0; i < length; i++ {
+    backup := make([]int, hi + 1)
+    for i := lo; i < length; i++ {
         backup[i] = datas[i]
     }
 
     l := lo
     r := mid + 1
-    for i := 0; i < length; i++ {
+    for i := lo; i < length; i++ {
         if (l > mid) {
             datas[i] = backup[r]
             r++

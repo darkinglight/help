@@ -5,3 +5,4 @@ office/.idea
 **/*.o
 **/*.out
 **/test
+**/bin
