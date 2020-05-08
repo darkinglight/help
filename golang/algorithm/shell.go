@@ -15,11 +15,9 @@ func sort(datas []int) {
     h := 2
 
     for N := length / h; N >= 1; N /= h {
-        for i := 0; i < length; i++ {
-            for j := i; j - N >= 0; j -= N {
-                if datas[j - N] > datas[j] {
-                    exchange(datas, j - N, j)
-                }
+        for i := N; i < length; i++ {
+            for j := i; j - N >= 0 && datas[j - N] > datas[j]; j -= N {
+                exchange(datas, j - N, j)
             }
         }
     }
