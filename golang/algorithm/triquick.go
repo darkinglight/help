@@ -36,11 +36,12 @@ func partition(datas []int, lo int, hi int) (int, int) {
             i++
             lt++
         } else {
-            swap(datas, i, hi)
-            hi--
+            swap(datas, i, gt)
+            gt--
         }
     }
-    swap(datas, lo, gt)
+    lt--
+    swap(datas, lo, lt)
     return lt, gt
 }
 
