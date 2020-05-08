@@ -11,20 +11,20 @@ func main() {
     lo := 0
     hi := len(datas) - 1
     mid := (lo + hi) / 2
-    if lo < mid {
-        if mid < hi {
+    if datas[lo] < datas[mid] {
+        if datas[mid] < datas[hi] {
             swap(datas, lo, mid)
-        } else if lo < hi {
+        } else if datas[lo] < datas[hi] {
             swap(datas, lo, hi)
             swap(datas, mid, hi)
         } else {
             swap(datas, mid, hi)
         }
     } else {
-        if mid > hi {
+        if datas[mid] > datas[hi] {
             swap(datas, lo, mid)
             swap(datas, mid, hi)
-        } else if hi < lo {
+        } else if datas[hi] < datas[lo] {
             swap(datas, lo, hi)
         } else {
             //nothing
@@ -58,14 +58,16 @@ func partition(datas []int, lo int, hi int) int {
     j := hi
 
     for i < j {
-        if datas[i] < v {
+        for datas[i] < v {
             i++
         }
-        if datas[j] > v {
+        for datas[j] > v {
             j--
         }
         if i < j {
             swap(datas, i, j)
+            i++
+            j--
         }
     }
     swap(datas, lo, j)
