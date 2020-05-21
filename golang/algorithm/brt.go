@@ -10,17 +10,29 @@ type struct node {
 }
 
 /**
- *×óÐý
- *           x(b)                z(r)
+ * rotate left
+ * (r) red node
+ * (b) black node
+ * (a) any node
+ *           x(a)                z(a)
  *           /  \     ----->     / \
- *          y  z(r)           x(b) zr
+ *        y(b)  z(r)           x(r) zr
  *              / \            / \
- *             zl zr          y  zl
+ *             zl zr        y(b)  zl
  */
 func rotateLeft(x *node) {
+    //node change
     z := x.right
     x.right = z.left
     z.left = x
+
+    //color change
+    z.color = x.color
+    x.color = 'r'
+
+    //N change
+    z.N = x.N
+    x.N = size(x.left) + 1 + size(x.right)
 
     return z
 }
