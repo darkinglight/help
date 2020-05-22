@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func test() {
 	s := "abedabcdababcdse"
 	pattern := "abcdababcd"
 	result := kmpSearch(s, pattern)

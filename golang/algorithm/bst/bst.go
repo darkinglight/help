@@ -1,18 +1,49 @@
 //Binary Search Tree
-package main
+package bst
 
 import (
     "errors"
-    "fmt"
 )
 
-func main() {
-    b := &bst{}
-    b.put(2)
-    b.put(1)
-    b.put(3)
-    result := b.batch(0, 2)
-    fmt.Println(result)
+type SymbleTable interface {
+    Put(value int)
+    Get(rank int) int
+    Del(value int)
+    Rank(value int) int
+    Range(lo int, hi int) []int
+}
+
+type BinarySearchTree struct {
+    root *node
+}
+
+func NewBST() *BinarySearchTree {
+    return &BinarySearchTree{}
+}
+
+func (bst *BinarySearchTree) Put(value int) {
+    bst.root = put(bst.root, value)
+}
+
+func (bst *BinarySearchTree) Get(rank int) (int, error) {
+    n := get(bst.root, rank)
+    if n == nil {
+        return -1, errors.New("value not exist")
+    } else {
+        return n.value, nil
+    }
+}
+
+func (bst *BinarySearchTree) Del(value int) {
+    bst.root = delete(bst.root, value)
+}
+
+func (bst *BinarySearchTree) Rank(value int) int {
+    return rank(bst.root, value)
+}
+
+func (bst *BinarySearchTree) Range(lo, hi int) []int {
+    return batch(bst.root, lo, hi)
 }
 
 type node struct {
@@ -123,41 +154,4 @@ func batch(n *node, lo, hi int) []int {
     rightResult := batch(n.right, lo - index - 1, hi - index - 1)
     result = append(result, rightResult...)
     return result
-}
-
-type search interface {
-    put(value int)
-    get(rank int) int
-    delete(value int)
-    rank(value int) int
-    batch(lo int, hi int) []int
-}
-
-type bst struct {
-    root *node
-}
-
-func (b *bst) put(value int) {
-    b.root = put(b.root, value)
-}
-
-func (b *bst) get(rank int) (int, error) {
-    n := get(b.root, rank)
-    if n == nil {
-        return -1, errors.New("value not exist")
-    } else {
-        return n.value, nil
-    }
-}
-
-func (b *bst) delete(value int) {
-    b.root = delete(b.root, value)
-}
-
-func (b *bst) rank(value int) int {
-    return rank(b.root, value)
-}
-
-func (b *bst) batch(lo, hi int) []int {
-    return batch(b.root, lo, hi)
 }

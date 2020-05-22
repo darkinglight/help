@@ -1,10 +1,10 @@
 //Black Red Tree
 package main
 
-type struct node {
+type brnode struct {
     value int
-    left *node
-    right *node
+    left *brnode
+    right *brnode
     N int
     color char
 }
@@ -20,7 +20,7 @@ type struct node {
  *              / \            / \
  *             zl zr        y(b)  zl
  */
-func rotateLeft(x *node) {
+func rotateLeft(x *brnode) {
     //node change
     z := x.right
     x.right = z.left
@@ -38,19 +38,19 @@ func rotateLeft(x *node) {
 }
 
 /**
- * ÓÒÐý
+ * rotate right
  *           x(r)                y(b)
  *           /  \     ----->     / \
  *        y(b)   xr           z(r)  x(r)
  *        / \                       / \
  *     z(r)  yr                    yr  xr
  */
-func rotateRight(x *node) {
+func rotateRight(x *brnode) {
 
 }
 
 /**
- * ·­×ª
+ * flip
  *           x(b)                x(r)
  *           /  \     ----->     / \
  *        y(r)  z(r)          y(b)  x(b)

@@ -4,7 +4,7 @@ import (
     "fmt"
 )
 
-func main() {
+func test() {
     datas := []int{3,1,7,5,10,10,3,9}
     sort(datas)
     fmt.Println(datas)
@@ -12,15 +12,16 @@ func main() {
 
 func sort(datas []int) {
     length := len(datas)
-    for i := 0; i < length - 1; i++ {
-        min := i
-        for j := i + 1; j < length; j++ {
-            if datas[min] > datas[j] {
-                min = j
+    h := 2
+
+    for N := length / h; N >= 1; N /= h {
+        for i := N; i < length; i++ {
+            for j := i; j - N >= 0 && datas[j - N] > datas[j]; j -= N {
+                exchange(datas, j - N, j)
             }
         }
-        exchange(datas, i, min)
     }
+
 }
 
 func exchange(datas []int, i int, j int) {

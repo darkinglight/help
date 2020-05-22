@@ -1,11 +1,10 @@
-//堆排序
-package main
+package heap
 
 import (
     "fmt"
 )
 
-func main() {
+func test() {
     datas := []int{3,7,6,17,2,3,5,6}
     datas = sort(datas)
     fmt.Println(datas)

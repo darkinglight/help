@@ -5,7 +5,7 @@ import (
     "fmt"
 )
 
-func main() {
+func test() {
     datas := []int{3, 1, 7, 6, 3, 2, 9, 8, 5, 3, 4, 2, 1, 3}
     sort(datas, 0, len(datas) - 1)
     fmt.Println(datas)

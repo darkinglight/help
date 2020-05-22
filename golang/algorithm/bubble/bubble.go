@@ -1,14 +1,14 @@
-package main
+package bubble
 
 import (
     "fmt"
 )
 
-func main() {
-    datas := []int{1, 5, 3, 2}
-    sort(datas)
-    fmt.Println(datas)
-}
+//func test() {
+//    datas := []int{1, 5, 3, 2}
+//    sort(datas)
+//    fmt.Println(datas)
+//}
 
 func sort(datas []int) {
 	length := len(datas)
