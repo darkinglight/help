@@ -1,60 +1,122 @@
-//Black Red Tree
+/**
+ * Black Red Tree
+ * version of 2-3 tree
+ */
 package main
 
-type brnode struct {
+type color int
+
+const {
+    red color = iota
+    black
+}
+
+type node struct {
     value int
-    left *brnode
-    right *brnode
+    left *node
+    right *node
     N int
-    color char
+    color color
 }
 
 /**
  * rotate left
- * (r) red node
- * (b) black node
- * (a) any node
- *           x(a)                z(a)
- *           /  \     ----->     / \
- *        y(b)  z(r)           x(r) zr
+ *             x                  n
+ *            / \     ----->     / \
+ *           y   n              x   nr
  *              / \            / \
- *             zl zr        y(b)  zl
+ *             nl nr          y  nl
  */
-func rotateLeft(x *brnode) {
+func rotateLeft(x *node) {
     //node change
-    z := x.right
-    x.right = z.left
-    z.left = x
+    n := x.right
+    x.right = n.left
+    n.left = x
 
-    //color change
-    z.color = x.color
-    x.color = 'r'
+    //color change, little trick
+    n.color ^= x.color
+    x.color ^= n.color
+    n.color ^= x.color
 
     //N change
-    z.N = x.N
+    n.N = x.N
     x.N = size(x.left) + 1 + size(x.right)
 
-    return z
+    return n
 }
 
 /**
  * rotate right
- *           x(r)                y(b)
- *           /  \     ----->     / \
- *        y(b)   xr           z(r)  x(r)
- *        / \                       / \
- *     z(r)  yr                    yr  xr
+ *            x                  n
+ *           / \     ----->     / \
+ *          n   y              nl  x
+ *         / \                    / \
+ *       nl  nr                  nr  y
  */
-func rotateRight(x *brnode) {
+func rotateRight(x *node) {
+    n := x.left
+    x.left = n.right
+    n.right = x
 
+    n.color ^= x.color
+    x.color ^= n.color
+    n.color ^= x.color
+
+    n.N = x.N
+    x.N = size(x.left) + 1 + size(x.right)
+
+    return n
 }
 
 /**
  * flip
+ * (r) red node
+ * (b) black node
  *           x(b)                x(r)
  *           /  \     ----->     / \
- *        y(r)  z(r)          y(b)  x(b)
+ *        y(r)  z(r)          y(b)  z(b)
  */
-func flip() {
+func flip(x *node) {
+    x.color = red
+    x.left.color = black
+    x.right.color = black
+}
 
+/**
+ * fix wrong node
+ * (r) red node
+ * (b) black node
+ * n new node
+ * there are 3 condition need fix:
+ *-------------------------------------------------------------
+ * (1)     x(b)                                  x(b)
+ *         / \           left rotate y           / \
+ *       y(r) xr        -------------->        n(r) xr
+ *       / \                                   / 
+ *    z(b) n(r)                              y(r)
+ *                                           /
+ *                                         z(b)
+ *-------------------------------------------------------------
+ * (2)     x(b)                                   y(b)
+ *         / \           right rotate x           / \
+ *       y(r) xr        --------------->        n(r) x(r)
+ *       / \                                        / \
+ *     n(r) yr                                     yr  xr
+ *-------------------------------------------------------------
+ * (3)     x(b)                                  x(r)
+ *         / \              flip x               / \
+ *      y(r)  n(r)      -------------->        y(b) n(b)
+ *-------------------------------------------------------------
+ */
+func fix(x *node) *node {
+    if x.left.right.color == red && x.left.left.color = black {
+        x.left = leftRotate(x.left)
+    }
+    if x.left.left.color == red && x.left.color == red {
+        x = rightRotate(x)
+    }
+    if x.left.color == red && x.right.color == red {
+        flip(x)
+    }
+    return x
 }

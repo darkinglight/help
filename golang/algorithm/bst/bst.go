@@ -108,20 +108,18 @@ func delete(n *node, value int) *node {
     }
     if value < n.value {
         n.left = delete(n.left, value)
-        return n
     } else if value > n.value {
         n.right = delete(n.right, value)
-        return n
-    }
-    if n.right == nil {
+    } else if n.right == nil {
         return n.left
     } else if n.left == nil {
         return n.right
+    } else {
+        //replace match node with right child's min node
+        node, min := deleteMin(n.right)
+        n.right = node
+        n.value = min
     }
-    //replace match node with right child's min node
-    node, min := deleteMin(n.right)
-    n.right = node
-    n.value = min
     n.N = size(n.left) + 1 + size(n.right)
 
     return n
