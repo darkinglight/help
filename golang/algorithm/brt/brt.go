@@ -2,21 +2,69 @@
  * Black Red Tree
  * version of 2-3 tree
  */
-package main
+package brt
 
-type color int
+type Color int
 
-const {
-    red color = iota
-    black
+const (
+    Red Color = iota
+    Black
+)
+
+type SymbleTable interface {
+    Put(key int)
+    Get(key int)
+    Del(key int)
+    Rank(key int)
+    Range(lo, hi int) []int
+}
+
+type RedBlackTree struct {
+    root *node
+}
+
+func (tree *RedBlackTree) Put(key int) {
+    tree.root = put(tree.root, key)
+    tree.root.color = Black
+}
+
+func New() *RedBlackTree {
+    return &RedBlackTree{}
 }
 
 type node struct {
-    value int
+    key int
     left *node
     right *node
     N int
-    color color
+    color Color
+}
+
+func size(n *node) int {
+    if n == nil {
+        return 0
+    } else {
+        return n.N
+    }
+}
+
+func put(n *node, key int) *node {
+    if n == nil {
+        return &node{key, nil, nil, 1, Red}
+    }
+    if key == n.key {
+        return n
+    }
+
+    if key < n.key {
+        n.left = put(n.left, key)
+    } else if key > n.key {
+        n.right = put(n.right, key)
+    }
+    n.N = size(n.left) + 1 + size(n.right)
+    n = fix(n)
+
+    return n
 }
 
 /**
@@ -27,7 +75,7 @@ type node struct {
  *              / \            / \
  *             nl nr          y  nl
  */
-func rotateLeft(x *node) {
+func rotateLeft(x *node) *node {
     //node change
     n := x.right
     x.right = n.left
@@ -53,7 +101,7 @@ func rotateLeft(x *node) {
  *         / \                    / \
  *       nl  nr                  nr  y
  */
-func rotateRight(x *node) {
+func rotateRight(x *node) *node {
     n := x.left
     x.left = n.right
     n.right = x
@@ -77,9 +125,9 @@ func rotateRight(x *node) {
  *        y(r)  z(r)          y(b)  z(b)
  */
 func flip(x *node) {
-    x.color = red
-    x.left.color = black
-    x.right.color = black
+    x.color = Red
+    x.left.color = Black
+    x.right.color = Black
 }
 
 /**
@@ -109,14 +157,22 @@ func flip(x *node) {
  *-------------------------------------------------------------
  */
 func fix(x *node) *node {
-    if x.left.right.color == red && x.left.left.color = black {
-        x.left = leftRotate(x.left)
+    if !isRed(x.left) && isRed(x.right) {
+        x = rotateLeft(x)
     }
-    if x.left.left.color == red && x.left.color == red {
-        x = rightRotate(x)
+    if x.left != nil && isRed(x.left) && isRed(x.left.left) {
+        x = rotateRight(x)
     }
-    if x.left.color == red && x.right.color == red {
+    if isRed(x.left) && isRed(x.right) {
         flip(x)
     }
     return x
+}
+
+func isRed(n *node) bool {
+    if n == nil {
+        return false
+    } else {
+        return n.color == Red
+    }
 }
