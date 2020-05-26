@@ -13,7 +13,7 @@ const (
 
 type SymbleTable interface {
     Put(key int)
-    Get(key int)
+    Get(key int) int
     Del(key int)
     Rank(key int)
     Range(lo, hi int) []int
@@ -26,6 +26,14 @@ type RedBlackTree struct {
 func (tree *RedBlackTree) Put(key int) {
     tree.root = put(tree.root, key)
     tree.root.color = Black
+}
+
+func (tree *RedBlackTree) Get(key int) int {
+    return get(tree.root, key)
+}
+
+func (tree *RedBlackTree) Del(key int) {
+    tree.root = del(tree.root, key)
 }
 
 func New() *RedBlackTree {
@@ -64,6 +72,53 @@ func put(n *node, key int) *node {
     n.N = size(n.left) + 1 + size(n.right)
     n = fix(n)
 
+    return n
+}
+
+func get(n *node, key int) int {
+    if n == nil {
+        return nil
+    }
+
+    if key < n.key {
+        return get(n.left, key)
+    } else if key > n.key {
+        return get(n.right, key)
+    } else {
+        return n.key
+    }
+}
+
+func delmin(n *node) (*node, int) {
+    if n.left == nil {
+        return n.right, n.key
+    } else {
+        n.left, value := delmin(n.left)
+        //change N
+        n.N = size(n.left) + 1 + size(n.right)
+        return n, value
+    }
+}
+
+func del(n *node, key int) *node {
+    if n == nil {
+        return nil
+    }
+
+    if key < n.key {
+        n.left = del(n.left, key)
+        n = fix(n)
+    } else if key > n.key {
+        n.right = del(n.right, key)
+        n = fix(n)
+    } ele if n.left == nil {
+        n = n.right
+    } else if n.right == nil {
+        n = n.left
+        n = fix(n)
+    } else {
+        n.right, n.key = delmin(n.right)
+    }
     return n
 }
 
