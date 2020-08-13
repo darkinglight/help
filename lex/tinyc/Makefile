@@ -1,10 +1,24 @@
-.PHONY=all
-all: lex.yy.c
-	gcc -o hide-digits lex.yy.c
+CC = gcc
+OUT = tcc
+OBJ = lex.yy.o y.tab.o
+SCANNER = scanner.l
+PARSER = parser.y
 
-lex.yy.c: hide-digits.l
-	win_flex hide-digits.l
+.PHONY: build run clean
 
-.PHONY=clean
+build: $(OUT)
+
+run: $(OUT)
+	./$(OUT) < test.c > test.asm
+
+$(OUT): $(OBJ)
+	$(CC) -o $@ $^
+
+lex.yy.c: $(SCANNER) y.tab.c
+	win_flex $<
+
+y.tab.c: $(PARSER)
+	win_bison -vdty $<
+
 clean:
-	rm -fr lex.yy.c hide-digits
+	rm -fr *.o lex.yy.c y.tab.c y.tab.h y.output $(OUT)
