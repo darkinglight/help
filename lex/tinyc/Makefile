@@ -4,11 +4,11 @@ OBJ = lex.yy.o y.tab.o
 SCANNER = scanner.l
 PARSER = parser.y
 
-.PHONY: build run clean
+.PHONY: build test clean
 
 build: $(OUT)
 
-run: $(OUT)
+test: $(OUT)
 	./$(OUT) < test.c > test.asm
 
 $(OUT): $(OBJ)

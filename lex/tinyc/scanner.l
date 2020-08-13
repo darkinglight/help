@@ -23,6 +23,18 @@ SINGLE_COMMENT2 "#"[^\n]*
 "void"          { return T_Void; }
 "return"        { return T_Return; }
 "print"         { return T_Print; }
+"readint"       { return T_ReadInt; }
+"while"         { return T_While; }
+"if"            { return T_If; }
+"else"          { return T_Else; }
+"break"         { return T_Break; }
+"continue"      { return T_Continue; }
+"<="            { return T_Le; }
+">="            { return T_Ge; }
+"=="            { return T_Eq; }
+"!="            { return T_Ne; }
+"&&"            { return T_And; }
+"||"            { return T_Or; }
 
 {INTEGER}       { _DUPTEXT; return T_IntConstant; }
 {STRING}        { _DUPTEXT; return T_StringConstant; }
