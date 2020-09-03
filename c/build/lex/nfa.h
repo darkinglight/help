@@ -10,8 +10,8 @@ struct table *header, *tail;
 
 struct state {
     char input[27];
-    struct state *next[27];
     Type type;
+    struct state *next[27];
 };
 
 void scan(String);

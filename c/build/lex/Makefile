@@ -1,4 +1,4 @@
-CC=gcc -g -O2
+CC=gcc -g
 
 .PHONY:test
 test: nfa.o
