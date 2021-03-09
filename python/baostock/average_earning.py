@@ -18,7 +18,15 @@ def get_closeprice(code):
     result_close = pd.DataFrame(data_list, columns=rs_close.fields, index=[code])
 
     result = pd.merge(result_open, result_close, on="code")
-    return result[["code","netProfit_x","netProfit_y"]]
+    result = result[["code","netProfit_x","netProfit_y"]]
+
+    evalue_list = []
+    evalue = bs.query_history_k_data_plus(code, "peTTM", start_date="2021-03-08", frequency="d", adjustflag="3")
+    while(evalue.error_code == '0') & evalue.next():
+        evalue_list.append(evalue.get_row_data())
+    result["pe"] = evalue_list[len(evalue_list) - 1][0]
+
+    return result
 
 def compute_avg_earning():
     lg = bs.login()
@@ -47,10 +55,14 @@ def compute_avg_earning():
     result['netProfit_y'] = result['netProfit_y'].astype(float)
     result = result[result['netProfit_y'] > 0]
     result['avgEarningRate'] = (result['netProfit_y']/result['netProfit_x']).apply(lambda x: math.pow(x,1/5)-1)
-    result = result.sort_values(by=['avgEarningRate'], ascending=False)
+    result = result[result['avgEarningRate'] > 0]
+    result['pe'] = result['pe'].astype(float)
+    result = result[result['pe'] > 0]
+    result['peg'] = result['pe'] / result['avgEarningRate']
+    result = result.sort_values(by=['peg'], ascending=True)
     result.to_csv("avg_earning_rate.csv", encoding="utf-8", index=False)
 
-    result[:10].plot.bar(title='Avg Earning Rate', x='code_name', y='avgEarningRate')
+    result[:10].plot.bar(title='peg', x='code_name', y='peg')
     plt.show()
 
     bs.logout()
