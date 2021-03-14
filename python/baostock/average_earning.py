@@ -18,7 +18,7 @@ def get_closeprice(code):
     result_close = pd.DataFrame(data_list, columns=rs_close.fields, index=[code])
 
     result = pd.merge(result_open, result_close, on="code")
-    result = result[["code","netProfit_x","netProfit_y"]]
+    result = result[["code","netProfit_x","netProfit_y","roeAvg_y","npMargin_y","gpMargin_y"]]
 
     evalue_list = []
     evalue = bs.query_history_k_data_plus(code, "peTTM", start_date="2021-03-08", frequency="d", adjustflag="3")
@@ -42,13 +42,13 @@ def compute_avg_earning():
             result = df
         else:
             result = result.append(df)
-    zz = bs.query_zz500_stocks()
-    while(zz.error_code == '0') & zz.next():
-        row = zz.get_row_data()
-        code = row[1]
-        df = get_closeprice(code)
-        df['code_name'] = row[2]
-        result = result.append(df)
+#    zz = bs.query_zz500_stocks()
+#    while(zz.error_code == '0') & zz.next():
+#        row = zz.get_row_data()
+#        code = row[1]
+#        df = get_closeprice(code)
+#        df['code_name'] = row[2]
+#        result = result.append(df)
     result = result[result['netProfit_x'] != '']
     result['netProfit_x'] = result['netProfit_x'].astype(float)
     result = result[result['netProfit_x'] > 0]
@@ -56,8 +56,13 @@ def compute_avg_earning():
     result = result[result['netProfit_y'] > 0]
     result['avgEarningRate'] = (result['netProfit_y']/result['netProfit_x']).apply(lambda x: math.pow(x,1/5)-1)
     result = result[result['avgEarningRate'] > 0]
+    result['roeAvg_y'] = result['roeAvg_y'].astype(float)
+    result = result[result['roeAvg_y'] > 0.1]
+    result['npMargin_y'] = result['npMargin_y'].astype(float)
+    result = result[result['npMargin_y'] > 0.1]
     result['pe'] = result['pe'].astype(float)
     result = result[result['pe'] > 0]
+    result = result[result['pe'] < 50]
     result['peg'] = result['pe'] / result['avgEarningRate']
     result = result.sort_values(by=['peg'], ascending=True)
     result.to_csv("avg_earning_rate.csv", encoding="utf-8", index=False)
@@ -68,6 +73,4 @@ def compute_avg_earning():
     bs.logout()
 
 if __name__ == '__main__':
-    matplotlib.rcParams['font.sans-serif'] = ['SimHei']
-    matplotlib.rcParams['font.family']='sans-serif'
     compute_avg_earning()
