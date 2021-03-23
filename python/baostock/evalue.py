@@ -3,7 +3,7 @@ import pandas as pd
 
 lg = bs.login()
 
-rs = bs.query_history_k_data_plus("sh.601012", "date,code,close,peTTM,pbMRQ,psTTM", start_date='2021-01-01',frequency="d", adjustflag="3")
+rs = bs.query_history_k_data_plus("sh.601012", "date,code,close,peTTM,pbMRQ,psTTM,pcfNcfTTM", start_date='2021-01-01',frequency="d", adjustflag="3")
 
 result_list = []
 while (rs.error_code == '0') & rs.next():
