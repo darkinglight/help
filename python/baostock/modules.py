@@ -1,6 +1,7 @@
 import baostock as bs
 import pandas as pd
 import os
+import math
 
 def priceinfo(code, date):
     filename = "data/priceinfo_{}.csv".format(code)
@@ -45,15 +46,39 @@ def dupont(code, year, quarter):
         result_profile.to_csv(filename, encoding="utf-8", index=False)
     return result_profile
 
+def profit(code, year, quarter):
+    filename = "data/profile_{}_{}_{}.csv".format(code,year,quarter)
+
+    if os.path.exists(filename):
+        result_profit = pd.read_csv(filename)
+    else:
+        rs_profit = bs.query_profit_data(code, year=year, quarter=quarter)
+        data_list = []
+        while(rs_profit.error_code == '0') & rs_profit.next():
+            data_list.append(rs_profit.get_row_data())
+        result_profit = pd.DataFrame(data_list, columns=rs_profit.fields)
+        result_profit.to_csv(filename, encoding="utf-8", index=False)
+    return result_profit
+
+
+
+
 if __name__ == '__main__':
     lg = bs.login()
     code = "sh.601012"
     year = 2020
     quarter = 3
+    date = "2021-03-22"
     result = dupont(code, year, quarter)
     print(result)
     result = baseinfo(code)
     print(result)
-    result = priceinfo(code, "2021-03-22")
-    print(result.loc[0, 'peTTM'])
+    result = priceinfo(code, date)
+    print(result.loc[result.shape[0] - 1, 'peTTM'])
+    profitPre = profit(code, year - 5, quarter)
+    print(profitPre)
+    profitPost = profit(code, year, quarter)
+    print(profitPost)
+    avgEarningRate = (profitPost['netProfit'].astype(float)/profitPre['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/5)-1)
+    print(avgEarningRate)
     bs.logout()
