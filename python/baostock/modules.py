@@ -74,22 +74,22 @@ def hs300():
     return result
 
 if __name__ == '__main__':
-    res = pd.DataFrame(columns=('name','peg'))
+    res = pd.DataFrame(columns=('name','growth','pe','peg'))
     lg = bs.login()
     hs300 = hs300()
-    print(hs300)
-    code = "sh.601012"
     year = 2020
     quarter = 3
     date = "2021-03-22"
-    result = dupont(code, year, quarter)
-    print(result)
-    baseinfo = baseinfo(code)
-    result = priceinfo(code, date)
-    print("peTTM:", result.loc[result.shape[0] - 1, 'peTTM'])
-    profitMid = profit(code, year - 3, quarter)
-    profitPost = profit(code, year, quarter)
-    avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
-    res = res.append([{'name':baseinfo.loc[0, 'code_name'],'peg':avgEarning3.get(0)*100}], ignore_index=True)
+    for index, row in hs300.iterrows():
+        code = row['code']
+        baseinfo = baseinfo(code)
+
+        priceinfo = priceinfo(code, date)
+        print("peTTM:", priceinfo.loc[priceinfo.shape[0] - 1, 'peTTM'])
+        
+        profitMid = profit(code, year - 3, quarter)
+        profitPost = profit(code, year, quarter)
+        avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
+        res = res.append([{'name':baseinfo.loc[0, 'code_name'],'growth':avgEarning3.get(0)*100, 'pe':priceinfo.loc[priceinfo.shape[0] - 1]}], ignore_index=True)
     print(res)
     bs.logout()
