@@ -60,25 +60,36 @@ def profit(code, year, quarter):
         result_profit.to_csv(filename, encoding="utf-8", index=False)
     return result_profit
 
-
-
+def hs300():
+    filename = "data/hs300.csv"
+    if os.path.exists(filename):
+        result = pd.read_csv(filename)
+    else:
+        rs = bs.query_hs300_stocks()
+        hs300_stocks = []
+        while (rs.error_code == '0') & rs.next():
+            hs300_stocks.append(rs.get_row_data())
+        result = pd.DataFrame(hs300_stocks, columns=rs.fields)
+        result.to_csv(filename, encoding="utf-8", index=False)
+    return result
 
 if __name__ == '__main__':
+    res = pd.DataFrame(columns=('name','peg'))
     lg = bs.login()
+    hs300 = hs300()
+    print(hs300)
     code = "sh.601012"
     year = 2020
     quarter = 3
     date = "2021-03-22"
     result = dupont(code, year, quarter)
     print(result)
-    result = baseinfo(code)
-    print(result)
+    baseinfo = baseinfo(code)
     result = priceinfo(code, date)
-    print(result.loc[result.shape[0] - 1, 'peTTM'])
-    profitPre = profit(code, year - 5, quarter)
-    print(profitPre)
+    print("peTTM:", result.loc[result.shape[0] - 1, 'peTTM'])
+    profitMid = profit(code, year - 3, quarter)
     profitPost = profit(code, year, quarter)
-    print(profitPost)
-    avgEarningRate = (profitPost['netProfit'].astype(float)/profitPre['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/5)-1)
-    print(avgEarningRate)
+    avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
+    res = res.append([{'name':baseinfo.loc[0, 'code_name'],'peg':avgEarning3.get(0)*100}], ignore_index=True)
+    print(res)
     bs.logout()
