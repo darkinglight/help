@@ -1,2 +1,0 @@
-[[runners.docker.services]]
-  name = "docker:20"
