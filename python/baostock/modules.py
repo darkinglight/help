@@ -74,23 +74,34 @@ def hs300():
     return result
 
 if __name__ == '__main__':
-    res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022'))
+    res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022', "roeAvg"))
     lg = bs.login()
     hs300 = hs300()
     year = 2022
     quarter = 4
     date = "2023-07-05"
     for index, row in hs300.iterrows():
-        if index == 0:
+        if index < 10:
             code = row['code']
-            baseinfo = baseinfo(code)
+            print("code", code)
+            base = baseinfo(code)
 
-            priceinfo = priceinfo(code, date)
-            print("peTTM:", priceinfo.loc[priceinfo.shape[0] - 1, 'peTTM'])
+            price = priceinfo(code, date)
+            print("peTTM:", price.loc[price.shape[0] - 1, 'peTTM'])
             
-            profitMid = profit(code, year - 3, quarter)
-            profitPost = profit(code, year, quarter)
-            avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
-            res = res._append({'name':baseinfo.loc[0, 'code_name'],'growth':avgEarning3.get(0)*100, 'pe':priceinfo.loc[priceinfo.shape[0] - 1], 'roe2022':profitPost['roeAvg']}, ignore_index=True)
+            profit2019 = profit(code, year - 3, quarter)
+            profit2020 = profit(code, year - 2, quarter)
+            profit2021 = profit(code, year - 1, quarter)
+            profit2022 = profit(code, year, quarter)
+
+            earningRate = (profit2022['netProfit'].astype(float)/profit2019['netProfit'].astype(float)).get(0)
+            if earningRate > 0:
+                avgEarning = math.pow(earningRate, 1/3) * 100 - 100
+            else:
+                avgEarning = 0
+
+            name = base.loc[0, 'code_name']
+            pe = price.loc[price.shape[0] - 1]
+            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022':profit2022['roeAvg']}, ignore_index=True)
     print(res)
     bs.logout()
