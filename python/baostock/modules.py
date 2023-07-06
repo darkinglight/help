@@ -74,22 +74,23 @@ def hs300():
     return result
 
 if __name__ == '__main__':
-    res = pd.DataFrame(columns=('name','growth','pe','peg'))
+    res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022'))
     lg = bs.login()
     hs300 = hs300()
-    year = 2020
-    quarter = 3
-    date = "2021-03-22"
+    year = 2022
+    quarter = 4
+    date = "2023-07-05"
     for index, row in hs300.iterrows():
-        code = row['code']
-        baseinfo = baseinfo(code)
+        if index == 0:
+            code = row['code']
+            baseinfo = baseinfo(code)
 
-        priceinfo = priceinfo(code, date)
-        print("peTTM:", priceinfo.loc[priceinfo.shape[0] - 1, 'peTTM'])
-        
-        profitMid = profit(code, year - 3, quarter)
-        profitPost = profit(code, year, quarter)
-        avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
-        res = res.append([{'name':baseinfo.loc[0, 'code_name'],'growth':avgEarning3.get(0)*100, 'pe':priceinfo.loc[priceinfo.shape[0] - 1]}], ignore_index=True)
+            priceinfo = priceinfo(code, date)
+            print("peTTM:", priceinfo.loc[priceinfo.shape[0] - 1, 'peTTM'])
+            
+            profitMid = profit(code, year - 3, quarter)
+            profitPost = profit(code, year, quarter)
+            avgEarning3 = (profitPost['netProfit'].astype(float)/profitMid['netProfit'].astype(float)).apply(lambda x: math.pow(x,1/3)-1)
+            res = res._append({'name':baseinfo.loc[0, 'code_name'],'growth':avgEarning3.get(0)*100, 'pe':priceinfo.loc[priceinfo.shape[0] - 1], 'roe2022':profitPost['roeAvg']}, ignore_index=True)
     print(res)
     bs.logout()
