@@ -101,7 +101,8 @@ if __name__ == '__main__':
                 avgEarning = 0
 
             name = base.loc[0, 'code_name']
-            pe = price.loc[price.shape[0] - 1]
-            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022':profit2022['roeAvg']}, ignore_index=True)
+            pe = price.loc[price.shape[0] - 1, 'peTTM']
+            roe2022 = profit2022.loc[0, 'roeAvg'] * 100
+            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
     print(res)
     bs.logout()
