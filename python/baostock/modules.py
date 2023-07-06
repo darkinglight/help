@@ -105,4 +105,5 @@ if __name__ == '__main__':
             roe2022 = profit2022.loc[0, 'roeAvg'] * 100
             res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
     print(res)
+    res.plot.bar()
     bs.logout()
