@@ -19,6 +19,7 @@ def priceinfo(code, date):
 
 def baseinfo(code):
     filename = "data/baseinfo.csv"
+    df = pd.DataFrame()
     if os.path.exists(filename):
         df = pd.read_csv(filename)
         result = df.loc[df["code"] == code]
@@ -30,7 +31,6 @@ def baseinfo(code):
         data_list.append(rs.get_row_data())
     result = pd.DataFrame(data_list, columns=rs.fields)
     if os.path.exists(filename):
-        df = pd.read_csv(filename)
         df = df.append(result, ignore_index=True)
         df.to_csv(filename, encoding="utf-8", index=False)
     else:
@@ -92,6 +92,7 @@ if __name__ == '__main__':
             code = row['code']
             print("code", code)
             base = baseinfo(code)
+            print(base)
 
             price = priceinfo(code, date)
             print("peTTM:", price.loc[price.shape[0] - 1, 'peTTM'])
@@ -107,10 +108,10 @@ if __name__ == '__main__':
             else:
                 avgEarning = 0
 
-            name = base.loc[0, 'code_name']
+            name = base.loc[0,'code_name']
             pe = price.loc[price.shape[0] - 1, 'peTTM']
             roe2022 = profit2022.loc[0, 'roeAvg'] * 100
-            res = res.append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
+            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
     print(res)
     res.plot.bar()
     bs.logout()
