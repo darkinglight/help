@@ -2,6 +2,7 @@ import baostock as bs
 import pandas as pd
 import os
 import math
+import baseinfo
 
 def priceinfo(code, date):
     filename = "data/priceinfo_{}.csv".format(code)
@@ -13,27 +14,6 @@ def priceinfo(code, date):
         while (rs.error_code == '0') & rs.next():
             result_list.append(rs.get_row_data())
         result = pd.DataFrame(result_list, columns=rs.fields)
-        result.to_csv(filename, encoding="utf-8", index=False)
-    return result
-
-
-def baseinfo(code):
-    filename = "data/baseinfo.csv"
-    df = pd.DataFrame()
-    if os.path.exists(filename):
-        df = pd.read_csv(filename)
-        result = df.loc[df["code"] == code]
-        if result.shape[0] > 0:
-            return result
-    rs = bs.query_stock_basic(code=code)
-    data_list = []
-    while(rs.error_code == '0') & rs.next():
-        data_list.append(rs.get_row_data())
-    result = pd.DataFrame(data_list, columns=rs.fields)
-    if os.path.exists(filename):
-        df = df.append(result, ignore_index=True)
-        df.to_csv(filename, encoding="utf-8", index=False)
-    else:
         result.to_csv(filename, encoding="utf-8", index=False)
     return result
 
@@ -82,7 +62,6 @@ def hs300():
 
 if __name__ == '__main__':
     res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022', "roeAvg"))
-    lg = bs.login()
     hs300 = hs300()
     year = 2022
     quarter = 4
@@ -91,7 +70,7 @@ if __name__ == '__main__':
         if index < 10:
             code = row['code']
             print("code", code)
-            base = baseinfo(code)
+            base = baseinfo.baseinfo(code)
             print(base)
 
             price = priceinfo(code, date)
@@ -108,10 +87,9 @@ if __name__ == '__main__':
             else:
                 avgEarning = 0
 
-            name = base.loc[0,'code_name']
+            name = base.iloc[0,1]
             pe = price.loc[price.shape[0] - 1, 'peTTM']
             roe2022 = profit2022.loc[0, 'roeAvg'] * 100
             res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
     print(res)
-    res.plot.bar()
-    bs.logout()
+    #res.plot.bar()
