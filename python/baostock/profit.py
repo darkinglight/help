@@ -18,7 +18,7 @@ def profit(code, year, quarter):
         item = pd.read_csv(itemfilename)
     else:
         rs_profit = bs.query_profit_data(code, year=year, quarter=quarter)
-        print("call query_profit-data api", code, year, quaarter)
+        print("call query_profit-data api", code, year, quarter)
         data_list = []
         while(rs_profit.error_code == '0') & rs_profit.next():
             data_list.append(rs_profit.get_row_data())
