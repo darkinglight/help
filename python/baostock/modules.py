@@ -39,6 +39,8 @@ if __name__ == '__main__':
             name = base.loc["code_name"]
             roe2022 = profit2022['roeAvg'] * 100
             roeAvg = (profit2019['roeAvg'] + profit2020['roeAvg'] + profit2021['roeAvg'] + profit2022['roeAvg']) * 100 / 4
-            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'peg': peg, 'roe2022': roe2022, 'roeAvg': roeAvg}, ignore_index=True)
+            res = res._append({'name': name, 'growth': round(avgEarning,2), 'pe': round(pe,2), 'peg': round(peg,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
+    res = res.sort_values(by = "roeAvg", ascending = False)
     print(res)
+    res.to_csv("dump.csv", encoding='utf-8')
     #res.plot.bar()
