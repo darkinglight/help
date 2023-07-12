@@ -28,9 +28,9 @@ if __name__ == '__main__':
             profit2021 = profit(code, year - 1, quarter)
             profit2022 = profit(code, year, quarter)
 
-            pe = price.loc['peTTM']
+            pe = float(price.loc['peTTM'])
             peg = 0
-            earningRate = (profit2022['netProfit'].astype(float)/profit2019['netProfit'].astype(float))
+            earningRate = float(profit2022['netProfit'])/float(profit2019['netProfit'])
             if earningRate > 0:
                 avgEarning = math.pow(earningRate, 1/3) * 100 - 100
                 peg = pe / avgEarning
@@ -38,8 +38,8 @@ if __name__ == '__main__':
                 avgEarning = 0
 
             name = base.loc["code_name"]
-            roe2022 = profit2022['roeAvg'] * 100
-            roeAvg = (profit2019['roeAvg'] + profit2020['roeAvg'] + profit2021['roeAvg'] + profit2022['roeAvg']) * 100 / 4
+            roe2022 = float(profit2022['roeAvg']) * 100
+            roeAvg = (float(profit2019['roeAvg']) + float(profit2020['roeAvg']) + float(profit2021['roeAvg']) + float(profit2022['roeAvg'])) * 100 / 4
             res = res.append({'name': name, 'growth': round(avgEarning,2), 'pe': round(pe,2), 'peg': round(peg,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
     # 过滤负分记录
     res = res.loc[(res["roeAvg"] > 0) & (res["pe"] > 0)]
