@@ -25,7 +25,7 @@ def profit(code, year, quarter):
         item = pd.DataFrame(data_list, columns=rs_profit.fields)
     item.insert(1, 'year', year)
     item.insert(2, 'quarter', quarter)
-    df = df._append(item)
+    df = df.append(item)
     df.to_csv(filename, encoding="utf-8", index=False)
     return item.iloc[0,:]
 

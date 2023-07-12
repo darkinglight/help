@@ -24,7 +24,7 @@ def priceinfo(code, date):
             result_list.append(rs.get_row_data())
         item = pd.DataFrame(result_list, columns=rs.fields)
 
-    df = df._append(item)
+    df = df.append(item)
     df.to_csv(filename, encoding="utf-8", index=False)
     return item.iloc[0,:]
 
