@@ -15,7 +15,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in hs300.iterrows():
-        if index < 30:
+        if index < 50:
             code = row['code']
             print(code)
             base = baseinfo(code)
