@@ -2,7 +2,8 @@ import baostock as bs
 import pandas as pd
 import os
 import math
-import baseinfo
+from baseinfo import baseinfo
+from hs300 import hs300
 
 def priceinfo(code, date):
     filename = "data/priceinfo_{}.csv".format(code)
@@ -47,19 +48,6 @@ def profit(code, year, quarter):
         result_profit.to_csv(filename, encoding="utf-8", index=False)
     return result_profit
 
-def hs300():
-    filename = "data/hs300.csv"
-    if os.path.exists(filename):
-        result = pd.read_csv(filename)
-    else:
-        rs = bs.query_hs300_stocks()
-        hs300_stocks = []
-        while (rs.error_code == '0') & rs.next():
-            hs300_stocks.append(rs.get_row_data())
-        result = pd.DataFrame(hs300_stocks, columns=rs.fields)
-        result.to_csv(filename, encoding="utf-8", index=False)
-    return result
-
 if __name__ == '__main__':
     res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022', "roeAvg"))
     hs300 = hs300()
@@ -70,7 +58,7 @@ if __name__ == '__main__':
         if index < 10:
             code = row['code']
             print("code", code)
-            base = baseinfo.baseinfo(code)
+            base = baseinfo(code)
             print(base)
 
             price = priceinfo(code, date)

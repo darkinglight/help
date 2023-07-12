@@ -13,9 +13,7 @@ def baseinfo(code):
     if result.shape[0] > 0:
         return result
 
-    lg = bs.login()
     rs = bs.query_stock_basic(code=code)
-    bs.logout()
 
     data_list = []
     while(rs.error_code == '0') & rs.next():
@@ -32,5 +30,7 @@ if __name__ == "__main__":
     code = "sh.600000"
     if len(sys.argv) > 1:
         code = sys.argv[1]
+    #lg = bs.login()
     result = baseinfo(code)
-    print(result["code"][0])
+    #bs.logout()
+    print(result.iloc[0])
