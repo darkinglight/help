@@ -9,21 +9,17 @@ if os.path.exists(filename):
     df = pd.read_csv(filename, sep=",", encoding='utf-8')
 
 def baseinfo(code):
+    global df
     result = df.loc[df["code"] == code]
-    if result.shape[0] > 0:
-        return result
-
-    rs = bs.query_stock_basic(code=code)
-
-    data_list = []
-    while(rs.error_code == '0') & rs.next():
-        data_list.append(rs.get_row_data())
-    result = pd.DataFrame(data_list, columns=rs.fields)
-
-    csv = df._append(result, ignore_index=True)
-    csv.to_csv(filename, encoding="utf-8", index=False)
-
-    return result
+    if result.shape[0] <= 0:
+        rs = bs.query_stock_basic(code=code)
+        data_list = []
+        while(rs.error_code == '0') & rs.next():
+            data_list.append(rs.get_row_data())
+        result = pd.DataFrame(data_list, columns=rs.fields)
+        df = df._append(result, ignore_index=True)
+        df.to_csv(filename, encoding="utf-8", index=False)
+    return result.iloc[0,:]
 
 if __name__ == "__main__":
     import sys
@@ -33,4 +29,4 @@ if __name__ == "__main__":
     #lg = bs.login()
     result = baseinfo(code)
     #bs.logout()
-    print(result.iloc[0])
+    print(result)

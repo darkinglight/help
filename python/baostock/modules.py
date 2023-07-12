@@ -16,9 +16,8 @@ if __name__ == '__main__':
     for index, row in hs300.iterrows():
         if index < 10:
             code = row['code']
-            print("code", code)
+            print(code)
             base = baseinfo(code)
-            print(base)
 
             price = priceinfo(code, date)
             print("peTTM:", price.loc[price.shape[0] - 1, 'peTTM'])
@@ -34,7 +33,7 @@ if __name__ == '__main__':
             else:
                 avgEarning = 0
 
-            name = base.iloc[0,1]
+            name = base.loc["code_name"]
             pe = price.loc[price.shape[0] - 1, 'peTTM']
             roe2022 = profit2022['roeAvg'] * 100
             res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
