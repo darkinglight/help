@@ -27,15 +27,18 @@ if __name__ == '__main__':
             profit2021 = profit(code, year - 1, quarter)
             profit2022 = profit(code, year, quarter)
 
+            pe = price.loc['peTTM']
+            peg = 0
             earningRate = (profit2022['netProfit'].astype(float)/profit2019['netProfit'].astype(float))
             if earningRate > 0:
                 avgEarning = math.pow(earningRate, 1/3) * 100 - 100
+                peg = pe / avgEarning
             else:
                 avgEarning = 0
 
             name = base.loc["code_name"]
-            pe = price.loc['peTTM']
             roe2022 = profit2022['roeAvg'] * 100
-            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'roe2022': roe2022}, ignore_index=True)
+            roeAvg = (profit2019['roeAvg'] + profit2020['roeAvg'] + profit2021['roeAvg'] + profit2022['roeAvg']) * 100 / 4
+            res = res._append({'name': name, 'growth':avgEarning, 'pe': pe, 'peg': peg, 'roe2022': roe2022, 'roeAvg': roeAvg}, ignore_index=True)
     print(res)
     #res.plot.bar()
