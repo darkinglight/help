@@ -9,7 +9,7 @@ from priceinfo import priceinfo
 
 if __name__ == '__main__':
     #lg = bs.login()
-    res = pd.DataFrame(columns=('name','growth','pe','peg','roe2019','roe2020','roe2021','roe2022', "roeAvg", "score"))
+    res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','peg','roe2019','roe2020','roe2021','roe2022', "roeAvg", "score"))
     hs300 = hs300()
     year = 2022
     quarter = 4
@@ -26,14 +26,16 @@ if __name__ == '__main__':
             
             profit2022 = profit(code, year, quarter)
             roe2022 = round(float(profit2022['roeAvg']) * 100,2)
+            netProfit2022 = round(float(profit2022['netProfit']),2)
             profit2021 = profit(code, year - 1, quarter)
             roe2021 = round(float(profit2021['roeAvg']) * 100,2)
             profit2020 = profit(code, year - 2, quarter)
             roe2020 = round(float(profit2020['roeAvg']) * 100,2)
             profit2019 = profit(code, year - 3, quarter)
             roe2019 = round(float(profit2019['roeAvg']) * 100,2)
+            netProfit2019 = round(float(profit2019['netProfit']),2)
 
-            res = res._append({'name':name,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022}, ignore_index=True)
+            res = res._append({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022}, ignore_index=True)
     # 过滤负分记录
     res = res.loc[(res["roe2019"] > 0) & (res["roe2020"] > 0) & (res["roe2021"] > 0) & (res["roe2022"] > 0) & (res["pe"] > 0)]
     res['roeAvg'] = res[['roe2019','roe2020','roe2021','roe2022']].mean(1)
