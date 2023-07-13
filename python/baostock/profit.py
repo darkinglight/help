@@ -10,7 +10,7 @@ if os.path.exists(filename):
 def profit(code, year, quarter):
     global df
     item = df.loc[(df["code"] == code) & (df["year"] == year)]
-    if result.shape[0] <= 0:
+    if item.shape[0] <= 0:
         rs_profit = bs.query_profit_data(code, year=year, quarter=quarter)
         print("call query_profit-data api", code, year, quarter)
         data_list = []
