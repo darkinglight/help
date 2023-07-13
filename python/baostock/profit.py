@@ -23,7 +23,7 @@ def profit(code, year, quarter):
         df.to_csv(filename, encoding="utf-8", index=False)
     if item.shape[0] <= 0:
         return pd.Series([code,-1,-1,-1,-1,-1,-1,-1,-1], index = ['code', 'roeAvg', 'npMargin', 'gpMargin', 'netProfit', 'epsTTM', 'MBRevenue', 'totalShare', 'liqaShare'])
-    return item.iloc[0,:]
+    return item.iloc[0]
 
 if __name__ == "__main__":
     result = profit("sh.600009", 2022, 4)

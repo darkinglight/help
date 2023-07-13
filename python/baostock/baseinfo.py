@@ -19,7 +19,7 @@ def baseinfo(code):
         result = pd.DataFrame(data_list, columns=rs.fields)
         df = df._append(result, ignore_index=True)
         df.to_csv(filename, encoding="utf-8", index=False)
-    return result.iloc[0,:]
+    return result.iloc[0]
 
 if __name__ == "__main__":
     import sys

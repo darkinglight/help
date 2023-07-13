@@ -26,7 +26,7 @@ def priceinfo(code, date):
 
     df = df._append(item)
     df.to_csv(filename, encoding="utf-8", index=False)
-    return item.iloc[0,:]
+    return item.iloc[0]
 
 if __name__ == "__main__":
     result = priceinfo("sh.600009","2023-07-05")
