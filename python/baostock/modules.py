@@ -8,14 +8,14 @@ from profit import profit
 from priceinfo import priceinfo
 
 if __name__ == '__main__':
-    #lg = bs.login()
+    lg = bs.login()
     res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022', "roeAvg", "score"))
     hs300 = hs300()
     year = 2022
     quarter = 4
     date = "2023-07-05"
     for index, row in hs300.iterrows():
-        if index < 50:
+        if index < 200:
             code = row['code']
             print(code)
             base = baseinfo(code)
@@ -23,24 +23,19 @@ if __name__ == '__main__':
             price = priceinfo(code, date)
             print("peTTM:", price.loc['peTTM'])
             
-            profit2019 = profit(code, year - 3, quarter)
-            profit2020 = profit(code, year - 2, quarter)
-            profit2021 = profit(code, year - 1, quarter)
             profit2022 = profit(code, year, quarter)
+            roe2022 = float(profit2022['roeAvg']) * 100
+            profit2021 = profit(code, year - 1, quarter)
+            roe2021 = float(profit2021['roeAvg']) * 100
+            profit2020 = profit(code, year - 2, quarter)
+            roe2020 = float(profit2020['roeAvg']) * 100
+            profit2019 = profit(code, year - 3, quarter)
+            roe2019 = float(profit2019['roeAvg']) * 100
 
             pe = float(price.loc['peTTM'])
-            peg = 0
-            earningRate = float(profit2022['netProfit'])/float(profit2019['netProfit'])
-            if earningRate > 0:
-                avgEarning = math.pow(earningRate, 1/3) * 100 - 100
-                peg = pe / avgEarning
-            else:
-                avgEarning = 0
-
             name = base.loc["code_name"]
-            roe2022 = float(profit2022['roeAvg']) * 100
-            roeAvg = (float(profit2019['roeAvg']) + float(profit2020['roeAvg']) + float(profit2021['roeAvg']) + float(profit2022['roeAvg'])) * 100 / 4
-            res = res._append({'name': name, 'growth': round(avgEarning,2), 'pe': round(pe,2), 'peg': round(peg,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
+            roeAvg = (roe2019 + roe2020 + roe2021 + roe2022) / 4
+            res = res._append({'name': name, 'pe': round(pe,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
     # 过滤负分记录
     res = res.loc[(res["roeAvg"] > 0) & (res["pe"] > 0)]
     # roe打分
@@ -60,4 +55,4 @@ if __name__ == '__main__':
     print(res)
     res.to_csv("dump.csv", encoding='utf-8')
     #res.plot.bar()
-    #bs.logout()
+    bs.logout()
