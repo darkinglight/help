@@ -8,13 +8,13 @@ def get_closeprice(code):
     rs_open = bs.query_profit_data(code, year=2015, quarter=3)
     data_list = []
     while(rs_open.error_code == '0') & rs_open.next():
-        data_list.append(rs_open.get_row_data())
+        data_list._append(rs_open.get_row_data())
     result_open = pd.DataFrame(data_list, columns=rs_open.fields, index=[code])
 
     rs_close = bs.query_profit_data(code, year=2020, quarter=3)
     data_list = []
     while(rs_close.error_code == '0') & rs_close.next():
-        data_list.append(rs_close.get_row_data())
+        data_list._append(rs_close.get_row_data())
     result_close = pd.DataFrame(data_list, columns=rs_close.fields, index=[code])
 
     result = pd.merge(result_open, result_close, on="code")
@@ -23,7 +23,7 @@ def get_closeprice(code):
     evalue_list = []
     evalue = bs.query_history_k_data_plus(code, "peTTM", start_date="2021-03-08", frequency="d", adjustflag="3")
     while(evalue.error_code == '0') & evalue.next():
-        evalue_list.append(evalue.get_row_data())
+        evalue_list._append(evalue.get_row_data())
     result["pe"] = evalue_list[len(evalue_list) - 1][0]
 
     return result
@@ -41,14 +41,14 @@ def compute_avg_earning():
         if result.empty:
             result = df
         else:
-            result = result.append(df)
+            result = result._append(df)
 #    zz = bs.query_zz500_stocks()
 #    while(zz.error_code == '0') & zz.next():
 #        row = zz.get_row_data()
 #        code = row[1]
 #        df = get_closeprice(code)
 #        df['code_name'] = row[2]
-#        result = result.append(df)
+#        result = result._append(df)
     result = result[result['netProfit_x'] != '']
     result['netProfit_x'] = result['netProfit_x'].astype(float)
     result = result[result['netProfit_x'] > 0]

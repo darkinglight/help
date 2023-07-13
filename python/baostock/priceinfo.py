@@ -21,10 +21,10 @@ def priceinfo(code, date):
         rs = bs.query_history_k_data_plus(code, "date,code,close,peTTM,pbMRQ,psTTM,pcfNcfTTM", start_date=date,frequency="d", adjustflag="3")
         result_list = []
         while (rs.error_code == '0') & rs.next():
-            result_list.append(rs.get_row_data())
+            result_list._append(rs.get_row_data())
         item = pd.DataFrame(result_list, columns=rs.fields)
 
-    df = df.append(item)
+    df = df._append(item)
     df.to_csv(filename, encoding="utf-8", index=False)
     return item.iloc[0,:]
 

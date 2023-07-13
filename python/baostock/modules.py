@@ -40,7 +40,7 @@ if __name__ == '__main__':
             name = base.loc["code_name"]
             roe2022 = float(profit2022['roeAvg']) * 100
             roeAvg = (float(profit2019['roeAvg']) + float(profit2020['roeAvg']) + float(profit2021['roeAvg']) + float(profit2022['roeAvg'])) * 100 / 4
-            res = res.append({'name': name, 'growth': round(avgEarning,2), 'pe': round(pe,2), 'peg': round(peg,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
+            res = res._append({'name': name, 'growth': round(avgEarning,2), 'pe': round(pe,2), 'peg': round(peg,2), 'roe2022': round(roe2022,2), 'roeAvg': round(roeAvg,2)}, ignore_index=True)
     # 过滤负分记录
     res = res.loc[(res["roeAvg"] > 0) & (res["pe"] > 0)]
     # roe打分

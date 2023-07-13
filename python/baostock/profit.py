@@ -15,11 +15,11 @@ def profit(code, year, quarter):
         print("call query_profit-data api", code, year, quarter)
         data_list = []
         while(rs_profit.error_code == '0') & rs_profit.next():
-            data_list.append(rs_profit.get_row_data())
+            data_list._append(rs_profit.get_row_data())
         item = pd.DataFrame(data_list, columns=rs_profit.fields)
         item.insert(1, 'year', year)
         item.insert(2, 'quarter', quarter)
-        df = df.append(item)
+        df = df._append(item)
         df.to_csv(filename, encoding="utf-8", index=False)
     return item.iloc[0,:]
 

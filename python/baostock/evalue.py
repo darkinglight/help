@@ -7,7 +7,7 @@ rs = bs.query_history_k_data_plus("sh.601012", "date,code,close,peTTM,pbMRQ,psTT
 
 result_list = []
 while (rs.error_code == '0') & rs.next():
-    result_list.append(rs.get_row_data())
+    result_list._append(rs.get_row_data())
 print(result_list[len(result_list) - 1][3])
 result = pd.DataFrame(result_list, columns=rs.fields)
 

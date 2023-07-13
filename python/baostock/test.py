@@ -9,7 +9,7 @@ rs = bs.query_history_k_data("sh.000001", fields, start_date='2000-01-01', end_d
 
 data_list = []
 while (rs.error_code == '0') & rs.next():
-    data_list.append(rs.get_row_data())
+    data_list._append(rs.get_row_data())
 result = pd.DataFrame(data_list, columns=rs.fields)
 result.index = pd.to_datetime(result.date)
 result.head()
