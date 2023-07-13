@@ -8,7 +8,7 @@ from profit import profit
 from priceinfo import priceinfo
 
 if __name__ == '__main__':
-    lg = bs.login()
+    #lg = bs.login()
     res = pd.DataFrame(columns=('name','growth','pe','peg','roe2022', "roeAvg", "score"))
     hs300 = hs300()
     year = 2022
@@ -60,4 +60,4 @@ if __name__ == '__main__':
     print(res)
     res.to_csv("dump.csv", encoding='utf-8')
     #res.plot.bar()
-    bs.logout()
+    #bs.logout()
