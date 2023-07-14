@@ -8,14 +8,14 @@ from profit import profit
 from priceinfo import priceinfo
 
 if __name__ == '__main__':
-    lg = bs.login()
+    #lg = bs.login()
     res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','peg','roe2019','roe2020','roe2021','roe2022', "roeAvg", "score"))
     hs300 = hs300()
     year = 2022
     quarter = 4
     date = "2023-07-05"
     for index, row in hs300.iterrows():
-        if index < 400:
+        if index < 10:
             code = row['code']
 
             base = baseinfo(code)
@@ -34,8 +34,8 @@ if __name__ == '__main__':
             profit2019 = profit(code, year - 3, quarter)
             roe2019 = round(float(profit2019['roeAvg']) * 100,2)
             netProfit2019 = round(float(profit2019['netProfit']),2)
-
-            res = res.append({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022}, ignore_index=True)
+            item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022})
+            res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
     res = res.loc[(res["roe2019"] > 0) & (res["roe2020"] > 0) & (res["roe2021"] > 0) & (res["roe2022"] > 0) & (res["pe"] > 0)]
     res['roeAvg'] = res[['roe2019','roe2020','roe2021','roe2022']].mean(1)
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     print(res)
     res.to_csv("dump.csv", encoding='utf-8')
     #res.plot.bar()
-    bs.logout()
+    #bs.logout()
