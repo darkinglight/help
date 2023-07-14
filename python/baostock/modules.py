@@ -7,6 +7,15 @@ from hs300 import hs300
 from profit import profit
 from priceinfo import priceinfo
 
+def getRoeAvg(profit):
+
+    if type(profit['roeAvg']) != 'str':
+        return profit['roeAvg']
+    elif len(profit['roeAvg']) <= 0:
+        return 0
+    else:
+        return round(float(profit['roeAvg']) * 100,2)
+
 if __name__ == '__main__':
     #lg = bs.login()
     res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','peg','roe2019','roe2020','roe2021','roe2022', "roeAvg", "score"))
@@ -25,14 +34,14 @@ if __name__ == '__main__':
             pe = round(float(price.loc['peTTM']),2)
             
             profit2022 = profit(code, year, quarter)
-            roe2022 = round(float(profit2022['roeAvg']) * 100,2)
+            roe2022 = getRoeAvg(profit2022)
             netProfit2022 = round(float(profit2022['netProfit']),2)
             profit2021 = profit(code, year - 1, quarter)
-            roe2021 = round(float(profit2021['roeAvg']) * 100,2)
+            roe2021 = getRoeAvg(profit2021)
             profit2020 = profit(code, year - 2, quarter)
-            roe2020 = round(float(profit2020['roeAvg']) * 100,2)
+            roe2020 = getRoeAvg(profit2020)
             profit2019 = profit(code, year - 3, quarter)
-            roe2019 = round(float(profit2019['roeAvg']) * 100,2)
+            roe2019 = getRoeAvg(profit2019)
             netProfit2019 = round(float(profit2019['netProfit']),2)
             item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022})
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
