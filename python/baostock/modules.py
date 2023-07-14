@@ -2,6 +2,7 @@ import baostock as bs
 import pandas as pd
 import os
 import math
+import matplotlib.pyplot as plt
 from baseinfo import baseinfo
 from hs300 import hs300
 from profit import profit
@@ -64,5 +65,6 @@ if __name__ == '__main__':
     res = res.sort_values(by = "score", ascending = True)
     print(res)
     res.to_csv("dump.csv", encoding='utf-8')
-    #res.plot.bar()
+    res.plot()
+    plt.show()
     #bs.logout()
