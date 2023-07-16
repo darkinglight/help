@@ -22,7 +22,11 @@ def profit(code, year, quarter):
         df = df.append(item)
         df.to_csv(filename, encoding="utf-8", index=False)
     if item.shape[0] <= 0:
-        return pd.Series([code,-1,-1,-1,-1,-1,-1,-1,-1], index = ['code', 'roeAvg', 'npMargin', 'gpMargin', 'netProfit', 'epsTTM', 'MBRevenue', 'totalShare', 'liqaShare'])
+        omit = pd.Series([code,year,quarter,-1,-1,-1,-1,-1,-1,-1,-1], index = ['code','year','quarter', 'roeAvg', 'npMargin', 'gpMargin', 'netProfit', 'epsTTM', 'MBRevenue', 'totalShare', 'liqaShare'])
+        df = pd.concat([df,omit.to_frame().T],ignore_index=True)
+        df.to_csv(filename, encoding="utf-8", index=False)
+        return omit
+        
     return item.iloc[0]
 
 if __name__ == "__main__":
