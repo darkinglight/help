@@ -17,7 +17,8 @@ def baseinfo(code):
         while(rs.error_code == '0') & rs.next():
             data_list.append(rs.get_row_data())
         result = pd.DataFrame(data_list, columns=rs.fields)
-        df = df.append(result, ignore_index=True)
+        #df = df.append(result, ignore_index=True)
+        df = pd.concat([df,result])
         df.to_csv(filename, encoding="utf-8", index=False)
     return result.iloc[0]
 

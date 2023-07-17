@@ -19,7 +19,7 @@ def profit(code, year, quarter):
         print("call query_profit-data api", code, year, quarter, item)
         item.insert(1, 'year', year)
         item.insert(2, 'quarter', quarter)
-        df = df.append(item)
+        df = pd.concat([df,item])
         df.to_csv(filename, encoding="utf-8", index=False)
     if item.shape[0] <= 0:
         omit = pd.Series([code,year,quarter,-1,-1,-1,-1,-1,-1,-1,-1], index = ['code','year','quarter', 'roeAvg', 'npMargin', 'gpMargin', 'netProfit', 'epsTTM', 'MBRevenue', 'totalShare', 'liqaShare'])
