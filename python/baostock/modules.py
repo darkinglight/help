@@ -12,7 +12,7 @@ from priceinfo import priceinfo
 def getRoeAvg(profit):
 
     if type(profit['roeAvg']) != 'str':
-        return profit['roeAvg']
+        return float(profit['roeAvg'])
     elif len(profit['roeAvg']) <= 0:
         return 0
     else:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in zz800.iterrows():
-        if index < 323:
+        if index < 500:
             code = row['code']
 
             base = baseinfo(code)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
             item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022})
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
-    res = res.loc[(float(res["roe2019"]) > 0) & (float(res["roe2020"]) > 0) & (float(res["roe2021"]) > 0) & (float(res["roe2022"]) > 0) & (res["pe"] > 0)]
+    res = res.loc[(res["roe2019"] > 0) & (res["roe2020"] > 0) & (res["roe2021"] > 0) & (res["roe2022"] > 0) & (res["pe"] > 0)]
     res['roeAvg'] = res[['roe2019','roe2020','roe2021','roe2022']].mean(1)
     # roe打分
     res = res.sort_values(by = "roeAvg", ascending = False)
