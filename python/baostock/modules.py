@@ -19,7 +19,7 @@ def getRoeAvg(profit):
         return round(float(profit['roeAvg']) * 100,2)
 
 if __name__ == '__main__':
-    lg = bs.login()
+    #lg = bs.login()
     res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','peg','roe2019','roe2020','roe2021','roe2022', "roeAvg", "score"))
     hs300 = hs300()
     zz500 = zz500()
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in zz800.iterrows():
-        if index < 500:
+        if index < 300:
             code = row['code']
 
             base = baseinfo(code)
@@ -66,8 +66,9 @@ if __name__ == '__main__':
         res['score'][index] += score
     
     res = res.sort_values(by = "score", ascending = True)
-    print(res)
     res.to_csv("dump.csv", encoding='utf-8')
-    res.plot()
+    plt.rcParams['font.family'] = 'Microsoft YaHei'
+    res = res.head(n = 10)
+    res.plot(x = 'name', y = 'roeAvg')
     plt.show()
-    bs.logout()
+    #bs.logout()
