@@ -19,6 +19,11 @@ def priceinfo(code, date):
         result = pd.DataFrame(result_list, columns=rs.fields)
         df = pd.concat([df, result])
         df.to_csv(filename, encoding="utf-8", index=False)
+    if result.shape[0] <= 0:
+        omit = pd.Series([date,code,-1,-1,-1,-1,-1],index=['date','code','close','peTTM','pbMRQ','psTTM','pcfNcfTTM'])
+        df = pd.concat([df,omit.to_frame().T],ignore_index=True)
+        df.to_csv(filename, encoding="utf-8", index=False)
+        return omit
     return result.iloc[0]
 
 if __name__ == "__main__":
