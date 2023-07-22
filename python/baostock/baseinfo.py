@@ -25,11 +25,21 @@ def baseinfo(code):
     return result.iloc[0]
 
 if __name__ == "__main__":
+    from allstock import allstock
     import sys
-    code = "bj.430017"
-    if len(sys.argv) > 1:
-        code = sys.argv[1]
     lg = bs.login()
-    result = baseinfo(code)
+    allstock = allstock()
+    for index, row in allstock.iterrows():
+        if index < 10:
+            code = row['code']
+            baseinfo(code)
+            print(code)
     bs.logout()
-    print(result)
+
+    #code = "bj.430017"
+    #if len(sys.argv) > 1:
+    #    code = sys.argv[1]
+    #lg = bs.login()
+    #result = baseinfo(code)
+    #bs.logout()
+    #print(result)
