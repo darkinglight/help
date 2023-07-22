@@ -17,17 +17,19 @@ def baseinfo(code):
         while(rs.error_code == '0') & rs.next():
             data_list.append(rs.get_row_data())
         result = pd.DataFrame(data_list, columns=rs.fields)
-        #df = df.append(result, ignore_index=True)
+        if result.shape[0] <= 0:
+            omit = pd.Series([code, -1, -1], index=['code','type','status'])
+            result = pd.concat([result,omit.to_frame().T],ignore_index=True)
         df = pd.concat([df,result])
         df.to_csv(filename, encoding="utf-8", index=False)
     return result.iloc[0]
 
 if __name__ == "__main__":
     import sys
-    code = "sh.600000"
+    code = "bj.430017"
     if len(sys.argv) > 1:
         code = sys.argv[1]
-    #lg = bs.login()
+    lg = bs.login()
     result = baseinfo(code)
-    #bs.logout()
+    bs.logout()
     print(result)
