@@ -28,7 +28,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in zz800.iterrows():
-        if index < 700:
+        if index < 900:
             code = row['code']
 
             base = baseinfo(code)
