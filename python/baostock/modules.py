@@ -32,6 +32,8 @@ if __name__ == '__main__':
             code = row['code']
 
             base = baseinfo(code)
+            if base["type"] != 1 | base["status"] != 1:
+                continue
             name = base.loc["code_name"]
 
             price = priceinfo(code, date)
