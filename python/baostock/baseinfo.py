@@ -30,7 +30,7 @@ if __name__ == "__main__":
     lg = bs.login()
     allstock = allstock()
     for index, row in allstock.iterrows():
-        if index < 10:
+        if index < 10000:
             code = row['code']
             baseinfo(code)
             print(code)
