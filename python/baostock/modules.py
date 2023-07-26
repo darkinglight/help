@@ -14,7 +14,8 @@ def getRoeAvg(profit):
     fieldType = type(profit['roeAvg'])
     if pd.isna(profit['roeAvg']):
         return 0
-    elif fieldType != 'str':
+    elif fieldType is not str:
+        print(fieldType)
         return float(profit['roeAvg']) * 100
     elif len(profit['roeAvg']) <= 0:
         return 0
@@ -22,7 +23,7 @@ def getRoeAvg(profit):
         return round(float(profit['roeAvg']) * 100,2)
 
 if __name__ == '__main__':
-    #lg = bs.login()
+    lg = bs.login()
     res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "score"))
     hs300 = hs300()
     zz500 = zz500()
@@ -32,7 +33,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in allstock.iterrows():
-        if index < 2500:
+        if index < 12500:
             code = row['code']
             base = baseinfo(code)
             if int(base["type"]) != 1 or int(base["status"]) != 1:
@@ -84,4 +85,4 @@ if __name__ == '__main__':
     #res.plot(y='pe', ax=ax)
     #ax.legend()
     #plt.show()
-    #bs.logout()
+    bs.logout()
