@@ -33,7 +33,7 @@ if __name__ == "__main__":
     lg = bs.login()
     allstock = allstock()
     for index, row in allstock.iterrows():
-        if index < 10000:
+        if index < 20000:
             code = row['code']
             cashflow(code)
             print(code)
