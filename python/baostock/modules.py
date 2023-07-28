@@ -24,7 +24,7 @@ def getRoeAvg(profit):
 
 if __name__ == '__main__':
     #lg = bs.login()
-    res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "NCAToAsset", "score"))
+    res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "NCAToAsset","tangibleAssetToAsset", "score"))
     hs300 = hs300()
     zz500 = zz500()
     allstock = allstock()
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     quarter = 4
     date = "2023-07-05"
     for index, row in allstock.iterrows():
-        if index < 2500:
+        if index < 12500:
             code = row['code']
             base = baseinfo(code)
             if int(base["type"]) != 1 or int(base["status"]) != 1:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             roe2019 = getRoeAvg(profit2019)
             netProfit2019 = round(float(profit2019['netProfit']),2)
             growth = round((netProfit2022 / netProfit2019 * 100 - 100)/4, 2)
-            item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022, 'growth':growth,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022,'pb':pb,'NCAToAsset':cash['NCAToAsset']})
+            item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022, 'growth':growth,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022,'pb':pb,'NCAToAsset':cash['NCAToAsset'],'tangibleAssetToAsset':cash['tangibleAssetToAsset']})
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
     minRoe = 10
