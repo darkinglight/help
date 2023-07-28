@@ -9,13 +9,13 @@ from zz500 import zz500
 from allstock import allstock
 from profit import profit
 from priceinfo import priceinfo
+from cashflow import cashflow
 
 def getRoeAvg(profit):
     fieldType = type(profit['roeAvg'])
     if pd.isna(profit['roeAvg']):
         return 0
     elif fieldType is not str:
-        print(fieldType)
         return float(profit['roeAvg']) * 100
     elif len(profit['roeAvg']) <= 0:
         return 0
@@ -23,17 +23,17 @@ def getRoeAvg(profit):
         return round(float(profit['roeAvg']) * 100,2)
 
 if __name__ == '__main__':
-    lg = bs.login()
-    res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "score"))
+    #lg = bs.login()
+    res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "NCAToAsset", "score"))
     hs300 = hs300()
     zz500 = zz500()
     allstock = allstock()
-    allstock = pd.concat([hs300,zz500,allstock], ignore_index=True)
+    #allstock = pd.concat([hs300,zz500,allstock], ignore_index=True)
     year = 2022
     quarter = 4
     date = "2023-07-05"
     for index, row in allstock.iterrows():
-        if index < 12500:
+        if index < 2500:
             code = row['code']
             base = baseinfo(code)
             if int(base["type"]) != 1 or int(base["status"]) != 1:
@@ -43,6 +43,9 @@ if __name__ == '__main__':
             price = priceinfo(code, date)
             pe = round(float(price.loc['peTTM']),2)
             pb = round(float(price.loc['pbMRQ']),2)
+
+            cash = cashflow(code)
+            print(cash)
             
             profit2022 = profit(code, year, quarter)
             roe2022 = getRoeAvg(profit2022)
@@ -55,7 +58,7 @@ if __name__ == '__main__':
             roe2019 = getRoeAvg(profit2019)
             netProfit2019 = round(float(profit2019['netProfit']),2)
             growth = round((netProfit2022 / netProfit2019 * 100 - 100)/4, 2)
-            item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022, 'growth':growth,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022,'pb':pb})
+            item = pd.Series({'name':name,'netProfit2019':netProfit2019,'netProfit2022':netProfit2022, 'growth':growth,'pe':pe,'roe2019':roe2019,'roe2020':roe2020,'roe2021':roe2021,'roe2022':roe2022,'pb':pb,'NCAToAsset':cash['NCAToAsset']})
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
     minRoe = 10
@@ -85,4 +88,4 @@ if __name__ == '__main__':
     #res.plot(y='pe', ax=ax)
     #ax.legend()
     #plt.show()
-    bs.logout()
+    #bs.logout()
