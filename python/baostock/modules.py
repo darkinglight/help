@@ -45,7 +45,6 @@ if __name__ == '__main__':
             pb = round(float(price.loc['pbMRQ']),2)
 
             cash = cashflow(code)
-            print(cash)
             
             profit2022 = profit(code, year, quarter)
             roe2022 = getRoeAvg(profit2022)
@@ -62,7 +61,7 @@ if __name__ == '__main__':
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
     minRoe = 10
-    res = res.loc[(res["roe2019"] > minRoe) & (res["roe2020"] > minRoe) & (res["roe2021"] > minRoe) & (res["roe2022"] > minRoe) & (res["pe"] > minRoe) & (res["pe"] > 0) & (res["pe"] < 30) & (res["growth"] > 5)]
+    res = res.loc[(res["roe2019"] > minRoe) & (res["roe2020"] > minRoe) & (res["roe2021"] > minRoe) & (res["roe2022"] > minRoe) & (res["pe"] > 0) & (res["pe"] < 30) & (res["growth"] > 5)]
     res['roeAvg'] = res[['roe2019','roe2020','roe2021','roe2022']].mean(1)
     res['roeMin'] = res[['roe2022','roeAvg']].min(1)
     res['roe/pb'] = res['roeMin'] / res['pb']
