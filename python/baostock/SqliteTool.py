@@ -1,28 +1,23 @@
 # -*- coding: utf-8 -*-
-# @Time : 2023/7/28 9:50 下午
-# @Project : sqlDemo
-# @File : SQLiteUtil.py
-# @Version: Python3.9.8
-　
-import sys
-import os
 import sqlite3
-　
-class SqliteTool():
+
+
+class SqliteTool:
     """
        简单sqlite数据库工具类
        编写这个类主要是为了封装sqlite，继承此类复用方法
        """
-    def __init__(self, dbName="sqlite3Test.db"):
+
+    def __init__(self, dbname="finance.db"):
         """
         初始化连接——使用完需关闭连接
-        :param dbName: 连接库的名字，注意，以'.db'结尾
+        :param dbname: 连接库的名字，注意，以'.db'结尾
         """
         # 连接数据库
-        self._conn = sqlite3.connect(dbName)
+        self._conn = sqlite3.connect(dbname)
         # 创建游标
         self._cur = self._conn.cursor()
-　
+
     def close_con(self):
         """
         关闭连接对象——主动调用
@@ -30,9 +25,9 @@ class SqliteTool():
         """
         self._cur.close()
         self._conn.close()
-　
+
     # 创建数据表
-    def create_tabel(self, sql: str):
+    def create_table(self, sql: str):
         """
         创建表
         :param sql: create sql语句
@@ -45,7 +40,7 @@ class SqliteTool():
             return True
         except Exception as e:
             print("[create table error]", e)
-　
+
     # 删除数据表
     def drop_table(self, sql: str):
         """
@@ -60,7 +55,7 @@ class SqliteTool():
         except Exception as e:
             print("[drop table error]", e)
             return False
-　
+
     # 插入或更新表数据，一次插入或更新一条数据
     def operate_one(self, sql: str, value: tuple):
         """
@@ -81,7 +76,7 @@ class SqliteTool():
             print("[insert/update one record error]", e)
             self._conn.rollback()
             return False
-　
+
     # 插入或更新表数据，一次插入或更新多条数据
     def operate_many(self, sql: str, value: list):
         """
@@ -103,7 +98,7 @@ class SqliteTool():
             print("[insert/update many  records error]", e)
             self._conn.rollback()
             return False
-　
+
     # 删除表数据
     def delete_record(self, sql: str):
         """
@@ -123,7 +118,7 @@ class SqliteTool():
         except Exception as e:
             print("[detele record error]", e)
             return False
-　
+
     # 查询一条数据
     def query_one(self, sql: str, params=None):
         """
@@ -143,7 +138,7 @@ class SqliteTool():
             return r
         except Exception as e:
             print("[select one record error]", e)
-　
+
     # 查询多条数据
     def query_many(self, sql: str, params=None):
         """
@@ -163,14 +158,19 @@ class SqliteTool():
             return r
         except Exception as e:
             print("[select many records error]", e)
-　
+
+
 if __name__ == '__main__':
     # 创建数据表info的SQL语句
-    create_tb_sql = "create table if not exists info(id  int  primary key,name text not null,age int not null,address char(50),);"
+    create_tb_sql = ("create table if not exists info("
+                     "id  int  primary key,"
+                     "name text not null,"
+                     "age int not null,"
+                     "address char(50));")
     # 创建对象
     mySqlite = SqliteTool()
     # 创建数据表
-    mySqlite.create_tabel(create_tb_sql)
+    mySqlite.create_table(create_tb_sql)
     # 插入数据
     # 一次插入一条数据
     mySqlite.operate_one('insert into info values(?,?,?)', (4, 'Tom3', 22))
@@ -190,10 +190,11 @@ if __name__ == '__main__':
     '''
     # 查询数据
     select_sql = "select name from info where age =? and name = ?"
-    conn = sqlite3.connect("sqlite3Test.db")
+    conn = sqlite3.connect("finance.db")
     # 创建游标
     cur = conn.cursor()
-    result_one = cur.execute("select * from info where name=:myname ", {"myname": 'Tom'})
+    result_one = cur.execute("select * from info where name=:name ",
+                             {"name": 'Tom'})
     print(result_one.fetchall())
     print(result_one)
     result_many = mySqlite.query_many(select_sql, (23, 'Tom'))
