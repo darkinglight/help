@@ -23,7 +23,7 @@ def getRoeAvg(profit):
         return round(float(profit['roeAvg']) * 100,2)
 
 if __name__ == '__main__':
-    #lg = bs.login()
+    lg = bs.login()
     res = pd.DataFrame(columns=('name','netProfit2019','netProfit2022','growth','pe','roe2019','roe2020','roe2021','roe2022', "roeAvg", "roeMin","pb","roe/pb", "NCAToAsset","tangibleAssetToAsset", "score"))
     hs300 = hs300()
     zz500 = zz500()
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     #allstock = pd.concat([hs300,zz500,allstock], ignore_index=True)
     year = 2022
     quarter = 4
-    date = "2023-07-05"
+    date = "2023-11-30"
     for index, row in allstock.iterrows():
         if index < 12500:
             code = row['code']
@@ -62,7 +62,7 @@ if __name__ == '__main__':
             res = pd.concat([res,item.to_frame().T], ignore_index=True)
     # 过滤负分记录
     minRoe = 10
-    res = res.loc[(res["roe2019"] > minRoe) & (res["roe2020"] > minRoe) & (res["roe2021"] > minRoe) & (res["roe2022"] > minRoe) & (res["pe"] > minRoe) & (res["pe"] > 0) & (res["pe"] < 30) & (res["growth"] > 5)]
+    res = res.loc[(res["roe2019"] > minRoe) & (res["roe2020"] > minRoe) & (res["roe2021"] > minRoe) & (res["roe2022"] > minRoe) & (res["pe"] > minRoe) & (res["pe"] > 0) & (res["pe"] < 30)]
     res['roeAvg'] = res[['roe2019','roe2020','roe2021','roe2022']].mean(1)
     res['roeMin'] = res[['roe2022','roeAvg']].min(1)
     res['roe/pb'] = res['roeMin'] / res['pb']
@@ -88,4 +88,4 @@ if __name__ == '__main__':
     #res.plot(y='pe', ax=ax)
     #ax.legend()
     #plt.show()
-    #bs.logout()
+    bs.logout()
