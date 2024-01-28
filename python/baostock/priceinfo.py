@@ -3,13 +3,7 @@ import pandas as pd
 import os
 
 
-filename = "data/priceinfo.csv"
-df = pd.DataFrame(columns=["code"])
-if os.path.exists(filename):
-    df = pd.read_csv(filename, sep=",", encoding='utf-8')
-
 def priceinfo(code, date):
-    global df
     result = df.loc[df["code"] == code]
     if result.shape[0] <= 0:
         rs = bs.query_history_k_data_plus(code, "date,code,close,peTTM,pbMRQ,psTTM,pcfNcfTTM", start_date=date,frequency="d", adjustflag="3")
@@ -27,5 +21,6 @@ def priceinfo(code, date):
     return result.iloc[0]
 
 if __name__ == "__main__":
+    date = '2023-07-05'
     result = priceinfo("sh.600009","2023-07-05")
     print(result)
