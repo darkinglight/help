@@ -19,11 +19,14 @@ BaseInfo = namedtuple("BaseInfo",
                        'type',
                        'status'])
 
+
 def baseinfo(code):
     sqlite_tool = SqliteTool()
     select_sql = 'select code, name, ipoDate, outDate, type, status from baseinfo where code = :code'
-    data = sqlite_tool.query_one(select_sql, {"code": code})
-    dto = BaseInfo(code=data[0],name=data[1],ipoDate=data[2],outDate=data[3],type=data[4],status=data[5])
+    baseData = sqlite_tool.query_one(select_sql, {"code": code})
+    if baseData is None:
+        return None
+    dto = BaseInfo(code=baseData[0], name=baseData[1], ipoDate=baseData[2], outDate=baseData[3], type=baseData[4], status=baseData[5])
     return dto
 
 

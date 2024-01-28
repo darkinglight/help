@@ -1,34 +1,79 @@
+from collections import namedtuple
+
 import baostock as bs
 import pandas as pd
 import os
 
-filename = "data/profile.csv"
-df = pd.DataFrame(columns=["code","year"])
-if os.path.exists(filename):
-    df = pd.read_csv(filename, sep=",", encoding='utf-8')
+from SqliteTool import SqliteTool
+
+Profit = namedtuple("Profit", ['code', 'year', 'quarter',
+                               'netProfit', 'roe', 'eps', 'share','yoyEquity'])
+
 
 def profit(code, year, quarter):
-    global df
-    item = df.loc[(df["code"] == code) & (df["year"] == year)]
-    if item.shape[0] <= 0:
-        rs_profit = bs.query_profit_data(code, year=year, quarter=quarter)
-        data_list = []
-        while(rs_profit.error_code == '0') & rs_profit.next():
-            data_list.append(rs_profit.get_row_data())
-        item = pd.DataFrame(data_list, columns=rs_profit.fields)
-        print("call query_profit-data api", code, year, quarter, item)
-        item.insert(1, 'year', year)
-        item.insert(2, 'quarter', quarter)
-        df = pd.concat([df,item])
-        df.to_csv(filename, encoding="utf-8", index=False)
-    if item.shape[0] <= 0:
-        omit = pd.Series([code,year,quarter,-1,-1,-1,-1,-1,-1,-1,-1], index = ['code','year','quarter', 'roeAvg', 'npMargin', 'gpMargin', 'netProfit', 'epsTTM', 'MBRevenue', 'totalShare', 'liqaShare'])
-        df = pd.concat([df,omit.to_frame().T],ignore_index=True)
-        df.to_csv(filename, encoding="utf-8", index=False)
-        return omit
-        
-    return item.iloc[0]
+    sqliteTool = SqliteTool()
+    data = sqliteTool.query_one("select * from profit where code = :code "
+                                "and year = :year and quarter = :quarter",
+                                {"code": code, "year": year, "quarter": quarter})
+    if data == None:
+        return data
+    dto = Profit(code=data[0], year=data[1], quarter=data[2], netProfit=data[3],
+                 roe=data[4], eps=data[5], share=data[6], yoyEquity=data[7])
+    return dto
+
 
 if __name__ == "__main__":
-    result = profit("sh.600009", 2022, 4)
+    # 创建数据表dividend的SQL语句
+    create_tb_sql = ("create table if not exists profit ("
+                     "id INTEGER PRIMARY KEY,"
+                     "code text,"
+                     "year int,"
+                     "quarter int,"
+                     "netProfit float default 0,"
+                     "roe float default 0,"
+                     "eps float default 0,"
+                     "share int default 0,"
+                     "yoyEquity float default 0,"
+                     "UNIQUE(code, year, quarter)"
+                     ");")
+    # 创建对象
+    sqliteTool = SqliteTool()
+    # sqliteTool.drop_table("drop table profit")
+    # 创建数据表
+    sqliteTool.create_table(create_tb_sql)
+
+    from allstock import allstock
+    from baseinfo import baseinfo
+
+    stocks = allstock()
+    bs.login()
+    for stock in stocks:
+        base_data = baseinfo(stock.code)
+        if base_data.type != 1:
+            continue
+        for year in range(2015, 2023):
+            if year < int(base_data.ipoDate[0:4]):
+                continue
+            exist = profit(stock.code, year, 4)
+            if exist is not None:
+                continue
+            yoyEquity = 0
+            rs = bs.query_growth_data(code=stock.code, year=year, quarter=4)
+            if rs.error_code != '0':
+                print(stock.code, "get growth error", rs.error_msg)
+            while rs.next():
+                item = rs.get_row_data()
+                yoyEquity = item[3]
+            rs = bs.query_profit_data(code=stock.code, year=year, quarter=4)
+            if rs.error_code != '0':
+                print(stock.code, "get profit error", rs.error_msg)
+            while rs.next():
+                item = rs.get_row_data()
+                sqliteTool.operate_one('insert into profit '
+                                       '(code,year,quarter,netProfit,roe,eps,share,yoyEquity) '
+                                       'values(?,?,?,?,?,?,?,?)',
+                                       (item[0], year, 4, item[6], item[3], item[7], item[9],yoyEquity))
+    bs.logout()
+
+    result = profit("sh.603886", 2022, 4)
     print(result)
