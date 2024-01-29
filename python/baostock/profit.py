@@ -17,8 +17,16 @@ def profit(code, year, quarter):
                                 {"code": code, "year": year, "quarter": quarter})
     if data == None:
         return data
+    try:
+        roeData = float(data[4])
+    except ValueError:
+        roeData = 0
+    try:
+        yoyEquityData = float(data[7])
+    except ValueError:
+        yoyEquityData = 0
     dto = Profit(code=data[0], year=data[1], quarter=data[2], netProfit=data[3],
-                 roe=data[4], eps=data[5], share=data[6], yoyEquity=data[7])
+                 roe=roeData, eps=data[5], share=data[6], yoyEquity=yoyEquityData)
     return dto
 
 
