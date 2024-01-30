@@ -37,24 +37,29 @@ if __name__ == "__main__":
         if int(base.ipoDate[0:4]) >= 2019:
             continue
         p2019 = profit(price.code, 2019, 4)
-        if p2019 is None or p2019.yoyEquity <= 0:
+        if p2019 is None:
             continue
         p2020 = profit(price.code, 2020, 4)
-        if p2020 is None or p2020.yoyEquity <= 0:
+        if p2020 is None:
             continue
         p2021 = profit(price.code, 2021, 4)
-        if p2021 is None or p2021.yoyEquity <= 0:
+        if p2021 is None:
             continue
         p2022 = profit(price.code, 2022, 4)
-        if p2022 is None or p2022.yoyEquity <= 0:
+        if p2022 is None:
             continue
-        roeAvg = (p2019.roe + p2020.roe + p2021.roe + p2022.roe) / 4
-        yoyEquityAvg = (p2019.yoyEquity + p2020.yoyEquity + p2021.yoyEquity + p2022.yoyEquity) / 4
+        roeAvg = (p2019.roe + p2020.roe + p2021.roe + p2022.roe) * 100 / 4
+        yoyEquityAvg = (p2019.yoyEquity + p2020.yoyEquity + p2021.yoyEquity + p2022.yoyEquity) * 100 / 4
+        dividendAvg = roeAvg - yoyEquityAvg
+        realGrowth = dividendAvg / price.pb + yoyEquityAvg
+        peg = price.pe / realGrowth
         sqliteTool.operate_one('insert or replace into rating1 '
                                '(code, name, pe, pb, '
                                'roe2019,roe2020,roe2021,roe2022,roeAvg,'
-                               'yoyEquity2019,yoyEquity2020,yoyEquity2021,yoyEquity2022,yoyEquityAvg) '
-                               'values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?) ',
+                               'yoyEquity2019,yoyEquity2020,yoyEquity2021,yoyEquity2022,yoyEquityAvg,'
+                               'dividendAvg,realGrowth,peg) '
+                               'values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?) ',
                                (price.code, base.name, price.pe, price.pb,
                                 p2019.roe, p2020.roe, p2021.roe, p2022.roe, roeAvg,
-                                p2019.yoyEquity, p2020.yoyEquity, p2021.yoyEquity, p2022.yoyEquity, yoyEquityAvg))
+                                p2019.yoyEquity, p2020.yoyEquity, p2021.yoyEquity, p2022.yoyEquity, yoyEquityAvg,
+                                dividendAvg, realGrowth, peg))
