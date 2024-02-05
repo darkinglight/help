@@ -2,6 +2,7 @@ from SqliteTool import SqliteTool
 from priceinfo import listPrice
 from baseinfo import baseinfo
 from profit import profit
+from dupon import dupont
 
 if __name__ == "__main__":
     create_tb_sql = ("create table if not exists rating1 ("
@@ -23,7 +24,8 @@ if __name__ == "__main__":
                      "yoyEquityAvg float default 0,"
                      "dividendAvg float default 0,"
                      "realGrowth float default 0,"
-                     "peg float default 0"
+                     "peg float default 0,"
+                     "assetToEquity float default 0"
                      ");")
     # 创建对象
     sqliteTool = SqliteTool()
@@ -53,13 +55,14 @@ if __name__ == "__main__":
         dividendAvg = roeAvg - yoyEquityAvg
         realGrowth = dividendAvg / price.pb + yoyEquityAvg
         peg = price.pe / realGrowth
+        dupon = dupont(price.code)
         sqliteTool.operate_one('insert or replace into rating1 '
                                '(code, name, pe, pb, '
                                'roe2019,roe2020,roe2021,roe2022,roeAvg,'
                                'yoyEquity2019,yoyEquity2020,yoyEquity2021,yoyEquity2022,yoyEquityAvg,'
-                               'dividendAvg,realGrowth,peg) '
-                               'values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?) ',
+                               'dividendAvg,realGrowth,peg,assetToEquity) '
+                               'values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?) ',
                                (price.code, base.name, price.pe, price.pb,
                                 p2019.roe, p2020.roe, p2021.roe, p2022.roe, roeAvg,
                                 p2019.yoyEquity, p2020.yoyEquity, p2021.yoyEquity, p2022.yoyEquity, yoyEquityAvg,
-                                dividendAvg, realGrowth, peg))
+                                dividendAvg, realGrowth, peg, dupon.dupontAssetStoEquity))
