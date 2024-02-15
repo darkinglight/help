@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     stocks = allstock()
     bs.login()
-    date = '2024-01-31'
+    date = '2024-02-06'
     for stock in stocks:
         rs = bs.query_history_k_data_plus(stock.code,
                                           "date,code,close,peTTM,pbMRQ",
