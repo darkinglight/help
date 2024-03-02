@@ -5,15 +5,16 @@ import pandas as pd
 import os
 from SqliteTool import SqliteTool
 
-
 Stock = namedtuple('Stock', ['code', 'name'])
+
+
 def allstock():
     sqlite_tool = SqliteTool()
     select_sql = "select code, name from stock where status = 1 and name != '';"
     datas = sqlite_tool.query_many(select_sql)
     result = []
     for item in datas:
-        stock = Stock(code=item[0],name=item[1])
+        stock = Stock(code=item[0], name=item[1])
         result.append(stock)
     return result
 
