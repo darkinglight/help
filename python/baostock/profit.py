@@ -1,6 +1,14 @@
 from collections import namedtuple
 from SqliteTool import SqliteTool
 
+# roeAvg	净资产收益率(平均)(%)	归属母公司股东净利润/[(期初归属母公司股东的权益+期末归属母公司股东的权益)/2]*100%
+# npMargin	销售净利率(%)	净利润/营业收入*100%
+# gpMargin	销售毛利率(%)	毛利/营业收入*100%=(营业收入-营业成本)/营业收入*100%
+# netProfit	净利润(元)
+# epsTTM	每股收益	归属母公司股东的净利润TTM/最新总股本
+# MBRevenue	主营营业收入(元)
+# totalShare	总股本
+# YOYEquity	净资产同比增长率	(本期净资产-上年同期净资产)/上年同期净资产的绝对值*100%
 Profit = namedtuple("Profit", ['code', 'year', 'quarter',
                                'netProfit', 'roe', 'eps', 'share','yoyEquity'])
 

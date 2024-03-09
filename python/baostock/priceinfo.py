@@ -9,19 +9,19 @@ PriceInfo = namedtuple("PriceInfo",
 def priceinfo(code):
     sqliteTool = SqliteTool()
     data = sqliteTool.query_one("select * from priceinfo where code = :code",
-                         {"code": code})
-    dto = PriceInfo(code=data[0],date=data[1],price=data[2],pe=data[3],pb=data[4])
+                                {"code": code})
+    dto = PriceInfo(code=data[0], date=data[1], price=data[2], pe=data[3], pb=data[4])
     return dto
+
 
 def listPrice():
     sqliteTool = SqliteTool()
     datas = sqliteTool.query_many("select * from priceinfo where pe > 5 and pe < 20")
     result = []
     for data in datas:
-        dto = PriceInfo(code=data[0],date=data[1],price=data[2],pe=data[3],pb=data[4])
+        dto = PriceInfo(code=data[0], date=data[1], price=data[2], pe=data[3], pb=data[4])
         result.append(dto)
     return result
-
 
 
 if __name__ == "__main__":
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     stocks = allstock()
     bs.login()
-    date = '2024-02-06'
+    date = '2024-03-01'
     for stock in stocks:
         rs = bs.query_history_k_data_plus(stock.code,
                                           "date,code,close,peTTM,pbMRQ",
@@ -58,7 +58,7 @@ if __name__ == "__main__":
             item = rs.get_row_data()
             print(item)
             sqliteTool.operate_one('insert or replace into priceinfo values(?,?,?,?,?) ',
-                                   (item[1], item[0], item[2], item[3],item[4]))
+                                   (item[1], item[0], item[2], item[3], item[4]))
     bs.logout()
 
     data = priceinfo('sh.601939')

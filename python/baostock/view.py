@@ -130,8 +130,8 @@ def getDetail(code):
 
 
 if __name__ == "__main__":
-    #listAll()
-    #listAllByPb()
+    listAll()
+    # listAllByPb()
     #listSelf()
-    listSelfByPb()
+    # listSelfByPb()
     #getDetail("sz.002478")
