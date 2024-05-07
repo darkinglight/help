@@ -36,10 +36,10 @@ def listSelf():
                                  " from rating1 "
                                  "where 1 = 1 "
                                  "and peg > 0 "
-                                 "and roeAvg < 30 "
-                                 "and roeAvg > yoyEquityAvg "
+                                 # "and roeAvg < 30 "
+                                 # "and roeAvg > yoyEquityAvg "
                                  # "and dividendAvg > 3 "
-                                 "and assetToEquity < 3 "
+                                 # "and assetToEquity < 3 "
                                  "and code in ("
                                  "'sz.000651',"
                                  "'sz.000848',"
@@ -57,6 +57,8 @@ def listSelf():
                                  "'sz.002833',"
                                  "'sz.002867',"
                                  "'sz.002884',"
+                                 "'sh.600210',"
+                                 "'sh.600273',"
                                  "'sh.600332',"
                                  "'sh.600511',"
                                  "'sh.600566',"
@@ -104,6 +106,8 @@ def listSelfByPb():
                                  "'sz.002833',"
                                  "'sz.002867',"
                                  "'sz.002884',"
+                                 "'sh.600210',"
+                                 "'sh.600273',"
                                  "'sh.600332',"
                                  "'sh.600511',"
                                  "'sh.600566',"
@@ -132,6 +136,6 @@ def getDetail(code):
 if __name__ == "__main__":
     listAll()
     # listAllByPb()
-    #listSelf()
+    # listSelf()
     # listSelfByPb()
     #getDetail("sz.002478")

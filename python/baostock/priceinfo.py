@@ -36,14 +36,14 @@ if __name__ == "__main__":
     # 创建对象
     sqliteTool = SqliteTool()
     # 创建数据表
-    # sqliteTool.drop_table("drop table priceinfo;")
+    sqliteTool.drop_table("drop table priceinfo;")
     sqliteTool.create_table(create_tb_sql)
 
     from allstock import allstock
 
     stocks = allstock()
     bs.login()
-    date = '2024-03-01'
+    date = '2024-04-26'
     for stock in stocks:
         rs = bs.query_history_k_data_plus(stock.code,
                                           "date,code,close,peTTM,pbMRQ",

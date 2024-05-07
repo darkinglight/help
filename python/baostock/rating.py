@@ -11,13 +11,11 @@ if __name__ == "__main__":
                      "name text,"
                      "pe float default 0,"
                      "pb float default 0,"
-                     "roe2019 float default 0,"
                      "roe2020 float default 0,"
                      "roe2021 float default 0,"
                      "roe2022 float default 0,"
                      "roe2023 float default 0,"
                      "roeAvg float default 0,"
-                     "yoyEquity2019 float default 0,"
                      "yoyEquity2020 float default 0,"
                      "yoyEquity2021 float default 0,"
                      "yoyEquity2022 float default 0,"
@@ -39,10 +37,7 @@ if __name__ == "__main__":
     result = listPrice()
     for price in result:
         base = baseinfo(price.code)
-        if int(base.ipoDate[0:4]) >= 2019:
-            continue
-        p2019 = profit(price.code, 2019, 4)
-        if p2019 is None:
+        if int(base.ipoDate[0:4]) >= 2020:
             continue
         p2020 = profit(price.code, 2020, 4)
         if p2020 is None:
@@ -53,8 +48,11 @@ if __name__ == "__main__":
         p2022 = profit(price.code, 2022, 4)
         if p2022 is None:
             continue
-        roeAvg = (p2019.roe + p2020.roe + p2021.roe + p2022.roe) * 100 / 4
-        yoyEquityAvg = (p2019.yoyEquity + p2020.yoyEquity + p2021.yoyEquity + p2022.yoyEquity) * 100 / 4
+        p2023 = profit(price.code, 2023, 4)
+        if p2023 is None:
+            continue
+        roeAvg = (p2020.roe + p2021.roe + p2022.roe + p2023.roe) * 100 / 4
+        yoyEquityAvg = (p2020.yoyEquity + p2021.yoyEquity + p2022.yoyEquity + p2023.yoyEquity) * 100 / 4
         dividendAvg = roeAvg - yoyEquityAvg
         realGrowth = dividendAvg / price.pb + yoyEquityAvg
         peg = price.pe / realGrowth
@@ -63,12 +61,12 @@ if __name__ == "__main__":
         dupon = dupont(price.code)
         sqliteTool.operate_one('insert or replace into rating1 '
                                '(code, name, pe, pb, '
-                               'roe2019,roe2020,roe2021,roe2022,roeAvg,'
-                               'yoyEquity2019,yoyEquity2020,yoyEquity2021,yoyEquity2022,yoyEquityAvg,'
+                               'roe2020,roe2021,roe2022,roe2023,roeAvg,'
+                               'yoyEquity2020,yoyEquity2021,yoyEquity2022,yoyEquity2023,yoyEquityAvg,'
                                'dividendAvg,realGrowth,peg,assetToEquity,peAvg,pegAvg) '
                                'values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?, ?,?) ',
                                (price.code, base.name, price.pe, price.pb,
-                                p2019.roe, p2020.roe, p2021.roe, p2022.roe, roeAvg,
-                                p2019.yoyEquity, p2020.yoyEquity, p2021.yoyEquity, p2022.yoyEquity, yoyEquityAvg,
+                                p2020.roe, p2021.roe, p2022.roe, p2023.roe, roeAvg,
+                                p2020.yoyEquity, p2021.yoyEquity, p2022.yoyEquity, p2023.yoyEquity, yoyEquityAvg,
                                 dividendAvg, realGrowth, peg, dupon.dupontAssetStoEquity,
                                 peAvg * 100, pegAvg))

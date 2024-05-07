@@ -1,12 +1,17 @@
 from collections import namedtuple
 
 import baostock as bs
-import pandas as pd
-import os
 
 from SqliteTool import SqliteTool
 
-
+# dupontROE	净资产收益率	归属母公司股东净利润/[(期初归属母公司股东的权益+期末归属母公司股东的权益)/2]*100%
+# dupontAssetStoEquity	权益乘数，反映企业财务杠杆效应强弱和财务风险	平均总资产/平均归属于母公司的股东权益
+# dupontAssetTurn	总资产周转率，反映企业资产管理效率的指标	营业总收入/[(期初资产总额+期末资产总额)/2]
+# dupontPnitoni	归属母公司股东的净利润/净利润，反映母公司控股子公司百分比。如果企业追加投资，扩大持股比例，则本指标会增加。
+# dupontNitogr	净利润/营业总收入，反映企业销售获利率
+# dupontTaxBurden	净利润/利润总额，反映企业税负水平，该比值高则税负较低。净利润/利润总额=1-所得税/利润总额
+# dupontIntburden	利润总额/息税前利润，反映企业利息负担，该比值高则税负较低。利润总额/息税前利润=1-利息费用/息税前利润
+# dupontEbittogr	息税前利润/营业总收入，反映企业经营利润率，是企业经营获得的可供全体投资人（股东和债权人）分配的盈利占企业全部营收收入的百分比
 def init():
     # 创建数据表dividend的SQL语句
     create_tb_sql = ("create table if not exists dupon ("
@@ -25,6 +30,7 @@ def init():
     # 创建对象
     sqliteTool = SqliteTool()
     # 创建数据表
+    sqliteTool.drop_table("drop table dupon;")
     sqliteTool.create_table(create_tb_sql)
 
     from allstock import allstock
@@ -36,7 +42,7 @@ def init():
         base_data = baseinfo(stock.code)
         if base_data.type != 1:
             continue
-        rs_dupont = bs.query_dupont_data(code=stock.code, year=2022, quarter=4)
+        rs_dupont = bs.query_dupont_data(code=stock.code, year=2023, quarter=4)
         while (rs_dupont.error_code == '0') & rs_dupont.next():
             item = rs_dupont.get_row_data()
             sqliteTool.operate_one('insert or replace into dupon '
@@ -69,5 +75,5 @@ def dupont(code):
 
 
 if __name__ == "__main__":
-    #init()
-    print(dupont("sh.600007"))
+    init()
+    # print(dupont("sh.600007"))
