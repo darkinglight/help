@@ -1,10 +1,21 @@
 import tkinter
 from baseinfo import baseinfo
+from profit import profit
 
 
 def calculate():
     data = baseinfo(codeValue.get())
-    message = "code:\t" + data.code + "\n" + "name:\t" + data.name
+    message = "code:\t" + data.code + "\n"
+    message += "name:\t" + data.name + "\n"
+
+    profit_data = profit(codeValue.get(), 2023, 4)
+    message += "roe2023:\t" + str(profit_data.roe) + "\n"
+    message += "净资产同比增长率2023:\t" + str(profit_data.yoyEquity) + "\n"
+
+    profit_data2022 = profit(codeValue.get(), 2022, 4)
+    message += "roe2022:\t" + str(profit_data2022.roe) + "\n"
+    message += "净资产同比增长率2022:\t" + str(profit_data2022.yoyEquity) + "\n"
+
     result.config(text=message)
 
 
