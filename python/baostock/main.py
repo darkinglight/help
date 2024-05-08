@@ -1,12 +1,17 @@
 import tkinter
 from baseinfo import baseinfo
 from profit import profit
+from priceinfo import priceinfo
 
 
 def calculate():
     data = baseinfo(codeValue.get())
     message = "code:\t" + data.code + "\n"
     message += "name:\t" + data.name + "\n"
+
+    price_data = priceinfo(codeValue.get(), "2024-05-08")
+    message += "pe:\t" + price_data.pe + "\n"
+    message += "pb:\t" + price_data.pb + "\n"
 
     profit_data = profit(codeValue.get(), 2023, 4)
     message += "roe2023:\t" + str(profit_data.roe) + "\n"
