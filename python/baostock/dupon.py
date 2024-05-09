@@ -56,7 +56,14 @@ def init():
 Dupon = namedtuple("Dupon", ['code','statDate','dupontROE',
                              'dupontAssetStoEquity','dupontAssetTurn','dupontPnitoni',
                                    'dupontNitogr','dupontTaxBurden','dupontIntburden','dupontEbittogr'])
-def dupont(code):
+
+def dupont(code, year, quarter):
+    result = dupont_from_db(code, year, quarter)
+    if result is None:
+        result = dupont_from_api(code, year, quarter)
+    return result
+
+def dupont_from_db(code, year, quarter):
     sqliteTool = SqliteTool()
     data = sqliteTool.query_one("select code,statDate,dupontROE,dupontAssetStoEquity,"
                                 "dupontAssetTurn,dupontPnitoni,dupontNitogr,"
@@ -72,6 +79,23 @@ def dupont(code):
     return Dupon(code=data[0],statDate=data[1],dupontROE=data[2],dupontAssetStoEquity=assetToEquity,
                  dupontAssetTurn=data[4],dupontPnitoni=data[5],dupontNitogr=data[6],
                  dupontTaxBurden=data[7],dupontIntburden=data[8],dupontEbittogr=data[9])
+
+def dupont_from_api(code, year, quarter):
+    rs_dupont = bs.query_dupont_data(code=code, year=year, quarter=quarter)
+    result = None
+    while (rs_dupont.error_code == '0') & rs_dupont.next():
+        item = rs_dupont.get_row_data()
+        sqliteTool = SqliteTool()
+        sqliteTool.operate_one('insert or replace into dupon '
+                               '(code,statDate,dupontROE,dupontAssetStoEquity,dupontAssetTurn,dupontPnitoni,'
+                               'dupontNitogr,dupontTaxBurden,dupontIntburden,dupontEbittogr) '
+                               'values(?,?,?, ?,?,?, ?,?,?, ?)',
+                               (item[0], item[2], item[3], item[4], item[5], item[6],
+                                item[7], item[8], item[9], item[10]))
+        result = Dupon(code=item[0],statDate=item[2],dupontROE=item[3],dupontAssetStoEquity=item[4],
+                 dupontAssetTurn=item[5],dupontPnitoni=item[6],dupontNitogr=item[7],
+                 dupontTaxBurden=item[8],dupontIntburden=item[9],dupontEbittogr=item[10])
+    return result
 
 
 if __name__ == "__main__":

@@ -10,16 +10,28 @@ def calculate():
     message += "name:\t" + data.name + "\n"
 
     price_data = priceinfo(codeValue.get(), "2024-05-08")
-    message += "pe:\t" + price_data.pe + "\n"
-    message += "pb:\t" + price_data.pb + "\n"
+    message += "pe:\t" + str(price_data.pe) + "\n"
+    message += "pb:\t" + str(price_data.pb) + "\n"
 
-    profit_data = profit(codeValue.get(), 2023, 4)
-    message += "roe2023:\t" + str(profit_data.roe) + "\n"
-    message += "净资产同比增长率2023:\t" + str(profit_data.yoyEquity) + "\n"
-
+    profit_data2023 = profit(codeValue.get(), 2023, 4)
     profit_data2022 = profit(codeValue.get(), 2022, 4)
-    message += "roe2022:\t" + str(profit_data2022.roe) + "\n"
-    message += "净资产同比增长率2022:\t" + str(profit_data2022.yoyEquity) + "\n"
+    profit_data2021 = profit(codeValue.get(), 2021, 4)
+    profit_data2020 = profit(codeValue.get(), 2020, 4)
+    roeAvg = (profit_data2020.roe + profit_data2021.roe + profit_data2022.roe + profit_data2023.roe) * 100 / 4
+    yoyEquityAvg = (profit_data2020.yoyEquity + profit_data2021.yoyEquity + profit_data2022.yoyEquity +
+                    profit_data2023.yoyEquity) * 100 / 4
+    dividendAvg = (roeAvg - yoyEquityAvg) / price_data.pb
+
+    growth = dividendAvg + yoyEquityAvg
+    peg = price_data.pe / growth
+    peg2 = price_data.pe / (dividendAvg * 1.5 + yoyEquityAvg)
+
+    message += "roeAvg:\t" + str(roeAvg) + "\n"
+    message += "增长率:\t" + str(yoyEquityAvg) + "\n"
+    message += "股息率:\t" + str(dividendAvg) + "\n"
+    message += "回报率:\t" + str(growth) + "\n"
+    message += "peg:\t" + str(peg) + "\n"
+    message += "股息*1.5peg:\t" + str(peg2) + "\n"
 
     result.config(text=message)
 
