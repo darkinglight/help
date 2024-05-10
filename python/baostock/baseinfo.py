@@ -39,7 +39,6 @@ def base_info_from_db(code):
 def base_info_from_api(code):
     dto = None
     sqliteTool = SqliteTool()
-    bs.login()
     rs = bs.query_stock_basic(code=code)
     if rs.error_code != '0':
         print("get baseinfo error: ", code, rs.error_code, rs.error_msg)
@@ -51,7 +50,6 @@ def base_info_from_api(code):
                                 base_data[3], base_data[4], base_data[5]))
         dto = BaseInfo(code=base_data[0], name=base_data[1], ipoDate=base_data[2],
                        outDate=base_data[3], type=base_data[4], status=base_data[5])
-    bs.logout()
     return dto
 
 

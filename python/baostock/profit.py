@@ -45,7 +45,6 @@ def profit_from_db(code, year, quarter):
 
 def profit_from_api(code, year, quarter):
     dto = None
-    bs.login()
     yoyEquity = 0
     rs = bs.query_growth_data(code=code, year=year, quarter=quarter)
     if rs.error_code != '0':
@@ -66,7 +65,6 @@ def profit_from_api(code, year, quarter):
                                (item[0], year, quarter, item[6], item[3], item[7], item[9], yoyEquity))
         dto = Profit(code=item[0], year=year, quarter=quarter, netProfit=item[6],
                      roe=item[3], eps=item[7], share=item[9], yoyEquity=yoyEquity)
-    bs.logout()
     return dto
 
 
