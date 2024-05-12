@@ -114,7 +114,7 @@ def get_peg(code, date):
 
 def peg_list():
     select_sql = ("select * from peg "
-                  "where peg > 0 and assetToEquity > 1.5 "
+                  "where roeAvg > 0 and peg > 0 and assetToEquity > 1.5 "
                   "order by peg asc;")
     datas = sqliteTool.query_many(select_sql)
     result = []
