@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import baostock as bs
 from peg import get_peg, peg_list
+from self import self_add
 
 
 def deploy_menu():
@@ -20,6 +21,7 @@ def add_stock():
     def calculate():
         bs.login()
         data = get_peg(codeValue.get(), "2024-05-08")
+        self_add(data.code, data.name)
         bs.logout()
 
         message = "code:\t" + data.code + "\n"
