@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import baostock as bs
-from peg import get_peg
+from peg import get_peg, peg_list
 
 
 def deploy_menu():
@@ -44,7 +44,11 @@ def add_stock():
     codeValue = StringVar()
     codeValue.set("sh.603886")
     Entry(frame1, textvariable=codeValue).grid(row=0, column=1)
-    Button(frame1, padx=2, pady=2, text="估值", command=calculate).grid(row=0, column=2)
+    Label(frame1, text="日期:", font=("微软雅黑", 14)).grid(row=0, column=2)
+    dateValue = StringVar()
+    dateValue.set("2024-05-09")
+    Entry(frame1, textvariable=dateValue).grid(row=0, column=3)
+    Button(frame1, padx=2, pady=2, text="估值", command=calculate).grid(row=0, column=4)
     # 第二个窗体
     frame2 = Frame(sub_win, relief=RAISED, borderwidth=2)
     frame2.pack(side=LEFT, fill=X, ipadx="0.1i", ipady="0.1i", expand=1)
@@ -53,19 +57,20 @@ def add_stock():
 
 
 def show_table(root):
-    tree = ttk.Treeview(root, columns=('code', 'name'))
+    pegs = peg_list()
+    tree = ttk.Treeview(root, columns=('name', 'peg'))
     tree.pack(fill=BOTH, expand=True)
     # 设置列的标题
-    for column in ('code', 'name'):
+    for column in ('name', 'peg'):
         tree.heading(column, text=column)
 
     # 添加数据到表格
-    for item in ['Item 1', 'Item 2', 'Item 3']:
-        tree.insert('', 'end', text=item, values=('1KB', 'Today'))
+    for item in pegs:
+        tree.insert('', 'end', text=item.code, values=(item.name, item.peg))
 
     # 可以调整列的宽度
-    tree.column('code', width=100)
     tree.column('name', width=100)
+    tree.column('peg', width=100)
 
 
 win = Tk()

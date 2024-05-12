@@ -59,8 +59,20 @@ def profit_from_api(code, year, quarter):
     sqliteTool = SqliteTool()
     while rs.next():
         item = rs.get_row_data()
+        try:
+            roeData = float(item[3])
+        except ValueError:
+            roeData = 0
+        try:
+            epsData = float(item[7])
+        except ValueError:
+            epsData = 0
+        try:
+            shareData = float(item[9])
+        except ValueError:
+            shareData = 0
         dto = Profit(code=item[0], year=year, quarter=quarter, netProfit=float(item[6]),
-                     roe=float(item[3]), eps=float(item[7]), share=float(item[9]),
+                     roe=roeData, eps=epsData, share=shareData,
                      yoyEquity=yoyEquity)
         sqliteTool.operate_one('insert into profit '
                                '(code,year,quarter,netProfit,roe,eps,share,yoyEquity) '
