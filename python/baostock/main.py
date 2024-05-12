@@ -56,25 +56,74 @@ def add_stock():
     result.grid(row=0, column=0)
 
 
-def show_table(root):
+def show_all():
+    tree.delete(*tree.get_children())
     pegs = peg_list()
-    tree = ttk.Treeview(root, columns=('name', 'peg'))
-    tree.pack(fill=BOTH, expand=True)
-    # 设置列的标题
-    for column in ('name', 'peg'):
-        tree.heading(column, text=column)
-
     # 添加数据到表格
     for item in pegs:
         tree.insert('', 'end', text=item.code, values=(item.name, item.peg))
 
-    # 可以调整列的宽度
-    tree.column('name', width=100)
-    tree.column('peg', width=100)
+
+def show_self():
+    tree.delete(*tree.get_children())
+    self_stocks = ['sz.000651',
+                   'sz.000848',
+                   'sz.000858',
+                   'sz.002014',
+                   'sz.002088',
+                   'sz.002158',
+                   'sz.002223',
+                   'sz.002318',
+                   'sz.002478',
+                   'sz.002597',
+                   'sz.002727',
+                   'sz.002737',
+                   'sz.002818',
+                   'sz.002833',
+                   'sz.002867',
+                   'sz.002884',
+                   'sh.600210',
+                   'sh.600273',
+                   'sh.600332',
+                   'sh.600511',
+                   'sh.600566',
+                   'sh.600690',
+                   'sh.600741',
+                   'sh.601012',
+                   'sh.601811',
+                   'sh.603279',
+                   'sh.603360',
+                   'sh.603365',
+                   'sh.603611',
+                   'sh.603757',
+                   'sh.603886'
+                   ]
+    pegs = peg_list()
+    for item in pegs:
+        if item.code in self_stocks:
+            tree.insert('', 'end', text=item.code, values=(item.name, item.peg))
 
 
 win = Tk()
 win.title(string="智能选股")
 deploy_menu()
-show_table(win)
+
+# 第一个窗体
+frame1 = Frame(win, relief=RAISED, borderwidth=2)
+frame1.pack(side=TOP, fill=BOTH, ipadx=13, ipady=13, expand=0)
+Button(frame1, padx=2, pady=2, text="全部", command=show_all).grid(row=0, column=0)
+Button(frame1, padx=2, pady=2, text="自选", command=show_self).grid(row=0, column=1)
+# 第二个窗体
+frame2 = Frame(win, relief=RAISED, borderwidth=2)
+frame2.pack(side=LEFT, fill=X, ipadx="0.1i", ipady="0.1i", expand=1)
+tree = ttk.Treeview(frame2, columns=('name', 'peg'))
+tree.pack(fill=BOTH, expand=True)
+# 设置列的标题
+for column in ('name', 'peg'):
+    tree.heading(column, text=column)
+# 可以调整列的宽度
+tree.column('name', width=100)
+tree.column('peg', width=100)
+
+show_all()
 win.mainloop()
