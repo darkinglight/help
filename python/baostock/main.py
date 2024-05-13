@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import baostock as bs
 from peg import get_peg, peg_list
-from self import self_add
+from self import self_add, self_alter, self_list_code
 
 
 def deploy_menu():
@@ -63,47 +63,22 @@ def show_all():
     pegs = peg_list()
     # 添加数据到表格
     for item in pegs:
-        tree.insert('', 'end', text=item.code, values=(item.name, item.peg))
+        tree.insert('', 'end', text=item.code, values=(item.name, item.peg, item.roeAvg, item.dividendAvg))
 
 
 def show_self():
     tree.delete(*tree.get_children())
-    self_stocks = ['sz.000651',
-                   'sz.000848',
-                   'sz.000858',
-                   'sz.002014',
-                   'sz.002088',
-                   'sz.002158',
-                   'sz.002223',
-                   'sz.002318',
-                   'sz.002478',
-                   'sz.002597',
-                   'sz.002727',
-                   'sz.002737',
-                   'sz.002818',
-                   'sz.002833',
-                   'sz.002867',
-                   'sz.002884',
-                   'sh.600210',
-                   'sh.600273',
-                   'sh.600332',
-                   'sh.600511',
-                   'sh.600566',
-                   'sh.600690',
-                   'sh.600741',
-                   'sh.601012',
-                   'sh.601811',
-                   'sh.603279',
-                   'sh.603360',
-                   'sh.603365',
-                   'sh.603611',
-                   'sh.603757',
-                   'sh.603886'
-                   ]
+    self_stocks = self_list_code()
     pegs = peg_list()
     for item in pegs:
         if item.code in self_stocks:
-            tree.insert('', 'end', text=item.code, values=(item.name, item.peg))
+            tree.insert('', 'end', text=item.code, values=(item.name, item.peg, item.roeAvg, item.dividendAvg))
+
+
+def tree_click(event):
+    selected_node = tree.focus()
+    node_text = tree.item(selected_node)["text"]
+    self_alter(node_text)
 
 
 win = Tk()
@@ -118,10 +93,11 @@ Button(frame1, padx=2, pady=2, text="自选", command=show_self).grid(row=0, col
 # 第二个窗体
 frame2 = Frame(win, relief=RAISED, borderwidth=2)
 frame2.pack(side=LEFT, fill=X, ipadx="0.1i", ipady="0.1i", expand=1)
-tree = ttk.Treeview(frame2, columns=('name', 'peg'))
+tree = ttk.Treeview(frame2, columns=('name', 'peg', 'roe', 'dividend'))
 tree.pack(fill=BOTH, expand=True)
+tree.bind("<Double-Button-1>", tree_click)
 # 设置列的标题
-for column in ('name', 'peg'):
+for column in ('name', 'peg', 'roe', 'dividend'):
     tree.heading(column, text=column)
 # 可以调整列的宽度
 tree.column('name', width=100)
