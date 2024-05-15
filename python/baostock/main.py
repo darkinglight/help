@@ -3,6 +3,7 @@ from tkinter import ttk
 import baostock as bs
 from peg import get_peg, peg_list
 from self import self_add, self_alter, self_list_code
+from baseinfo import base_info_like
 
 
 def deploy_menu():
@@ -20,7 +21,10 @@ def deploy_menu():
 def add_stock():
     def calculate():
         bs.login()
-        data = get_peg(codeValue.get(), "2024-05-08")
+        base_info_data = base_info_like(codeValue.get())
+        if base_info_data is None:
+            return
+        data = get_peg(base_info_data.code, "2024-05-08")
         self_add(data.code, data.name)
         bs.logout()
 
@@ -63,7 +67,8 @@ def show_all():
     pegs = peg_list()
     # 添加数据到表格
     for item in pegs:
-        tree.insert('', 'end', text=item.code, values=(item.name, item.peg, item.roeAvg, item.dividendAvg))
+        if item.roeAvg > 0 and item.dividendAvg > 0 and item.peg > 0 and item.assetToEquity < 2:
+            tree.insert('', 'end', text=item.code, values=(item.name, item.peg, item.roeAvg, item.dividendAvg))
 
 
 def show_self():

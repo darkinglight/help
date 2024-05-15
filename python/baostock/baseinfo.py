@@ -28,6 +28,18 @@ def baseinfo(code):
     return dto
 
 
+def base_info_like(code):
+    sqlite_tool = SqliteTool()
+    select_sql = ('select code, name, ipoDate, outDate, type, status from baseinfo '
+                  'where code like \'%' + code + '%\'')
+    base_data = sqlite_tool.query_one(select_sql)
+    if base_data is None:
+        return None
+    dto = BaseInfo(code=base_data[0], name=base_data[1], ipoDate=base_data[2],
+                   outDate=base_data[3], type=base_data[4], status=base_data[5])
+    return dto
+
+
 def base_info_from_db(code):
     sqlite_tool = SqliteTool()
     select_sql = 'select code, name, ipoDate, outDate, type, status from baseinfo where code = :code'
@@ -101,8 +113,8 @@ def init_baseinfo():
 if __name__ == "__main__":
     # init_baseinfo_table()
     bs.login()
-    init_baseinfo()
-    # data = baseinfo('sh.600290')
-    # print(data)
+    # init_baseinfo()
+    data = base_info_like('600290')
+    print(data)
     bs.logout()
     # print(base_info_list())
