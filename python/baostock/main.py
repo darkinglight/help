@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import baostock as bs
-from peg import get_peg, peg_list
+from peg import get_peg, peg_list, refresh_all
 from self import self_add, self_alter, self_list_code
 from baseinfo import base_info_like
 from config import get_config, set_config
@@ -16,7 +16,12 @@ def deploy_menu():
     menu.add_cascade(label="股票", menu=filemenu)
     # 文件菜单-菜单项
     filemenu.add_command(label="添加股票", command=add_stock, accelerator="Ctrl-N")
+    filemenu.add_command(label="刷新股票", command=refresh_stock, accelerator="Ctrl-F")
     filemenu.add_command(label="退出", command=win.quit, accelerator="Esc")
+
+
+def refresh_stock():
+    refresh_all("2024-05-17")
 
 
 def add_stock():
