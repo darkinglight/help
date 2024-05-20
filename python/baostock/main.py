@@ -4,7 +4,7 @@ import baostock as bs
 from peg import get_peg, peg_list, refresh_all
 from self import self_add, self_alter, self_list_code
 from baseinfo import base_info_like
-from config import get_config, set_config
+from config import get_configs, set_config
 
 
 def deploy_menu():
@@ -104,7 +104,11 @@ win = Tk()
 win.title(string="智能选股")
 deploy_menu()
 
-config = get_config()
+configs = get_configs()
+config_names = []
+for config_item in configs:
+    config_names.append(config_item.name)
+config = configs[0]
 
 # 第一个窗体
 frame1 = Frame(win, relief=RAISED, borderwidth=2)
@@ -140,6 +144,9 @@ Radiobutton(frame1, text="是", value=True, variable=self).grid(row=3, column=1)
 Radiobutton(frame1, text="否", value=False, variable=self).grid(row=3, column=2)
 
 Button(frame1, padx=2, pady=2, text="搜索", command=show_all).grid(row=4, column=0)
+combo_box = ttk.Combobox(frame1, values=config_names)
+combo_box.grid(row=4, column=1)
+combo_box.current(0)
 
 # 第二个窗体
 frame2 = Frame(win, relief=RAISED, borderwidth=2)

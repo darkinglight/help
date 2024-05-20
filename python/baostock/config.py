@@ -26,11 +26,24 @@ def create_table():
     sqlite_tool.create_table(create_tb_sql)
 
 
+def get_configs():
+    datas = sqlite_tool.query_many("select * from config")
+    result = []
+    for data in datas:
+        item = transfer(data)
+        result.append(item)
+    return result
+
+
 def get_config():
     name = "default"
     data = sqlite_tool.query_one("select * from config where name = :name", {"name": name})
     if data is None:
         return None
+    return transfer(data)
+
+
+def transfer(data):
     return Config(name=data[0], roeMin=data[1], roeMax=data[2], dividendMin=data[3],
                   dividendMax=data[4], assetToEquityMax=data[5], self=data[6])
 
