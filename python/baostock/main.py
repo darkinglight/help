@@ -72,7 +72,7 @@ def add_stock():
 
 
 def show_all():
-    set_config(roeMin.get(), roeMax.get(), dividendMin.get(), dividendMax.get(), assetToEquityMax.get(), self.get())
+    set_config(config.id, config.name, roeMin.get(), roeMax.get(), dividendMin.get(), dividendMax.get(), assetToEquityMax.get(), self.get())
     tree.delete(*tree.get_children())
     self_stocks = self_list_code()
     pegs = peg_list()
@@ -100,6 +100,24 @@ def tree_click(event):
     self_alter(node_text)
 
 
+def combobox_event(event):
+    global config
+    selected_content = combo_box.get()
+    for config_item in configs:
+        if selected_content == config_item.name:
+            config = config_item
+            break
+    refersh_config(config)
+
+def refersh_config(config):
+    roeMin.set(config.roeMin)
+    roeMax.set(config.roeMax)
+    dividendMin.set(config.dividendMin)
+    dividendMax.set(config.dividendMax)
+    assetToEquityMax.set(config.assetToEquityMax)
+    self.set(config.self)
+
+
 win = Tk()
 win.title(string="智能选股")
 deploy_menu()
@@ -116,30 +134,24 @@ frame1.pack(side=TOP, fill=BOTH, ipadx=13, ipady=13, expand=0)
 
 Label(frame1, text="roe:", font=("微软雅黑", 14)).grid(row=0, column=0)
 roeMin = DoubleVar()
-roeMin.set(config.roeMin)
 Entry(frame1, textvariable=roeMin).grid(row=0, column=1)
 Label(frame1, text="--", font=("微软雅黑", 14)).grid(row=0, column=2)
 roeMax = DoubleVar()
-roeMax.set(config.roeMax)
 Entry(frame1, textvariable=roeMax).grid(row=0, column=3)
 
 Label(frame1, text="股息率:", font=("微软雅黑", 14)).grid(row=1, column=0)
 dividendMin = DoubleVar()
-dividendMin.set(config.dividendMin)
 Entry(frame1, textvariable=dividendMin).grid(row=1, column=1)
 Label(frame1, text="--", font=("微软雅黑", 14)).grid(row=1, column=2)
 dividendMax = DoubleVar()
-dividendMax.set(config.dividendMax)
 Entry(frame1, textvariable=dividendMax).grid(row=1, column=3)
 
 Label(frame1, text="总资产/净资产 Max:", font=("微软雅黑", 14)).grid(row=2, column=0)
 assetToEquityMax = DoubleVar()
-assetToEquityMax.set(config.assetToEquityMax)
 Entry(frame1, textvariable=assetToEquityMax).grid(row=2, column=1)
 
 Label(frame1, text="自选股:", font=("微软雅黑", 14)).grid(row=3, column=0)
 self = BooleanVar()
-self.set(config.self)
 Radiobutton(frame1, text="是", value=True, variable=self).grid(row=3, column=1)
 Radiobutton(frame1, text="否", value=False, variable=self).grid(row=3, column=2)
 
@@ -147,6 +159,8 @@ Button(frame1, padx=2, pady=2, text="搜索", command=show_all).grid(row=4, colu
 combo_box = ttk.Combobox(frame1, values=config_names)
 combo_box.grid(row=4, column=1)
 combo_box.current(0)
+combo_box.bind("<<ComboboxSelected>>", combobox_event)
+refersh_config(config)
 
 # 第二个窗体
 frame2 = Frame(win, relief=RAISED, borderwidth=2)
