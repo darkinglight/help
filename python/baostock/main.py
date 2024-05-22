@@ -5,6 +5,7 @@ from peg import get_peg, peg_list, refresh_all
 from self import self_add, self_alter, self_list_code
 from baseinfo import base_info_like
 from config import get_configs, set_config
+from date import today
 
 
 def deploy_menu():
@@ -60,7 +61,7 @@ def add_stock():
 
     Label(frame1, text="日期:", font=("微软雅黑", 14)).grid(row=0, column=2)
     dateValue = StringVar()
-    dateValue.set("2024-05-09")
+    dateValue.set(today())
     Entry(frame1, textvariable=dateValue).grid(row=0, column=3)
 
     Button(frame1, padx=2, pady=2, text="估值", command=calculate).grid(row=0, column=4)
