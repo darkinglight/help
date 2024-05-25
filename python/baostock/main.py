@@ -6,6 +6,7 @@ from self import self_add, self_alter, self_list_code
 from baseinfo import base_info_like
 from config import get_configs, set_config
 from date import today
+from operator import attrgetter
 
 
 def deploy_menu():
@@ -22,7 +23,9 @@ def deploy_menu():
 
 
 def refresh_stock():
-    refresh_all("2024-05-17")
+    bs.login()
+    refresh_all(today())
+    bs.logout()
 
 
 def add_stock():
@@ -77,6 +80,7 @@ def show_all():
     tree.delete(*tree.get_children())
     self_stocks = self_list_code()
     pegs = peg_list()
+    pegs = sorted(pegs, key=attrgetter("peg"))
     # 添加数据到表格
     for item in pegs:
         if roeMin is not None and item.roeAvg < roeMin.get():

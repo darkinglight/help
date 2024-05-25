@@ -7,10 +7,11 @@ import baostock as bs
 from collections import namedtuple
 
 sqliteTool = SqliteTool()
-
+# peg的分红系数放到main调节 2. roeAvg和当前roe取个平均值
 Peg = namedtuple("Peg", [
     "code",
     "name",
+    "date",
     "pe",
     "pb",
     "roeAvg",
@@ -26,6 +27,7 @@ def init_table():
     create_tb_sql = ("create table if not exists peg ("
                      "code text PRIMARY KEY,"
                      "name text,"
+                     "date text,"
                      "pe float default 0,"
                      "pb float default 0,"
                      "roeAvg float default 0,"
@@ -45,7 +47,8 @@ def refresh_all(date):
     exist_peg = peg_list()
     exist_codes = []
     for peg in exist_peg:
-        exist_codes.append(peg.code)
+        if peg.date == date:
+            exist_codes.append(peg.code)
     stocks = base_info_list()
     for stock in stocks:
         if stock.code in exist_codes:
@@ -56,6 +59,8 @@ def refresh_all(date):
 
 def get_peg(code, date):
     year = int(date[0:4]) - 1
+    if date[5:] < "05-01":
+        year = year - 1
     quarter = 4
 
     base = baseinfo(code)
@@ -82,8 +87,11 @@ def get_peg(code, date):
         roeAvg += profit_item.roe
         yoyEquityAvg += profit_item.yoyEquity
         profileCount += 1
-    roeAvg = roeAvg * 100 / profileCount
-    yoyEquityAvg = yoyEquityAvg * 100 / profileCount
+    for profit_item in [profit0, profit1, profit2, profit3]:
+        if profit_item is not None:
+            latest_profit = profit_item
+    roeAvg = (roeAvg * 100 / profileCount + latest_profit.roe) / 2
+    yoyEquityAvg = (yoyEquityAvg * 100 / profileCount + latest_profit.yoyEquity) / 2
     dividendAvg = (roeAvg - yoyEquityAvg) / pb
     realGrowth = dividendAvg + yoyEquityAvg
     peg = pe / (dividendAvg * 1.5 + yoyEquityAvg)
@@ -94,14 +102,15 @@ def get_peg(code, date):
     asset_to_equity = dupont_data.dupontAssetStoEquity
 
     sqliteTool.operate_one('insert or replace into peg '
-                           '(code, name, pe, pb, roeAvg, yoyEquityAvg,'
+                           '(code, name, date, pe, pb, roeAvg, yoyEquityAvg,'
                            'dividendAvg,realGrowth,peg,assetToEquity) '
-                           'values(?,?,?, ?,?,?, ?,?,?,?) ',
-                           (code, name, pe, pb, roeAvg, yoyEquityAvg,
+                           'values(?,?,?,?, ?,?,?, ?,?,?,?) ',
+                           (code, name, date, pe, pb, roeAvg, yoyEquityAvg,
                             dividendAvg, realGrowth, peg, asset_to_equity))
 
     return Peg(code=code,
                name=name,
+               date=date,
                pe=pe,
                pb=pb,
                roeAvg=roeAvg,
@@ -113,29 +122,29 @@ def get_peg(code, date):
 
 
 def peg_list():
-    select_sql = ("select * from peg "
-                  "order by peg asc;")
+    select_sql = "select * from peg;"
     datas = sqliteTool.query_many(select_sql)
     result = []
     for item in datas:
         peg = Peg(code=item[0],
                   name=item[1],
-                  pe=item[2],
-                  pb=item[3],
-                  roeAvg=item[4],
-                  yoyEquityAvg=item[5],
-                  dividendAvg=item[6],
-                  realGrowth=item[7],
-                  peg=item[8],
-                  assetToEquity=item[9])
+                  date=item[2],
+                  pe=item[3],
+                  pb=item[4],
+                  roeAvg=item[5],
+                  yoyEquityAvg=item[6],
+                  dividendAvg=item[7],
+                  realGrowth=item[8],
+                  peg=item[9],
+                  assetToEquity=item[10])
         result.append(peg)
     return result
 
 
 # peg's pe use peAvg = pb/roeAvg
 if __name__ == "__main__":
-    # init_table()
-    bs.login()
+    init_table()
+    # bs.login()
     # print(get_peg("sh.603886", "2024-05-08"))
-    refresh_all("2024-05-08")
-    bs.logout()
+    # refresh_all("2024-05-08")
+    # bs.logout()

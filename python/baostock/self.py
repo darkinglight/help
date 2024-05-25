@@ -16,7 +16,7 @@ def init_table():
 
 
 def self_add(code, name):
-    sqliteTool.operate_one('insert into self values(?,?)', (code, name))
+    sqliteTool.operate_one('insert or replace into self values(?,?)', (code, name))
 
 
 def self_delete(code):
