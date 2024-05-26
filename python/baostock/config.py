@@ -5,7 +5,8 @@ from SqliteTool import SqliteTool
 sqlite_tool = SqliteTool()
 
 Config = namedtuple("Config", ['id', 'name', 'roeMin', 'roeMax',
-                               'dividendMin', 'dividendMax', 'assetToEquityMax', 'self'])
+                               'dividendMin', 'dividendMax', 'assetToEquityMax',
+                               'dividendRatio', 'self'])
 
 
 def create_table():
@@ -18,6 +19,7 @@ def create_table():
                      "dividendMin float default 0,"
                      "dividendMax float default 0,"
                      "assetToEquityMax float default 0,"
+                     "dividendRatio float default 0,"
                      "self boolean default false,"
                      "status integer default 0"
                      ");")
@@ -46,20 +48,22 @@ def get_config():
 
 def transfer(data):
     return Config(id=data[0], name=data[1], roeMin=data[2], roeMax=data[3], dividendMin=data[4],
-                  dividendMax=data[5], assetToEquityMax=data[6], self=data[7])
+                  dividendMax=data[5], assetToEquityMax=data[6], dividendRatio=data[7], self=data[8])
 
 
-def set_config(id, name, roeMin, roeMax, dividendMin, dividendMax, assetToEquityMax, self):
+def set_config(id, name, roeMin, roeMax, dividendMin, dividendMax, assetToEquityMax, dividendRatio, self):
     if name is None:
         name = "default"
     sqlite_tool.operate_one('insert or replace into config '
-                            '(id, name, roeMin, roeMax, dividendMin, dividendMax, assetToEquityMax, self) '
-                            'values (?,?,?,?, ?,?,?,?)', (id, name, roeMin, roeMax, dividendMin,
-                                                        dividendMax, assetToEquityMax, self))
+                            '(id, name, roeMin, roeMax, dividendMin, dividendMax, '
+                            'assetToEquityMax, dividendRatio, self) '
+                            'values (?,?,?,?, ?,?,?,?, ?)', (id, name, roeMin, roeMax, dividendMin,
+                                                        dividendMax, assetToEquityMax, dividendRatio, self))
 
 
 if __name__ == "__main__":
     create_table()
-    set_config(1, "default", 5, 10, 2, 10, 2, False)
-    set_config(2, "roe_high", 10, 30, 2, 10, 2, False)
+    set_config(1, "default", 5, 10, 2, 10, 2, 1, False)
+    set_config(2, "roe_high", 10, 30, 2, 10, 2, 1, False)
+    set_config(3, "roe_dividend", 10, 30, 2, 10, 2, 1.5, False)
     print(get_config())

@@ -76,7 +76,8 @@ def add_stock():
 
 
 def show_all():
-    set_config(config.id, config.name, roeMin.get(), roeMax.get(), dividendMin.get(), dividendMax.get(), assetToEquityMax.get(), self.get())
+    set_config(config.id, config.name, roeMin.get(), roeMax.get(), dividendMin.get(), dividendMax.get(),
+               assetToEquityMax.get(), dividendRatio.get(), self.get())
     tree.delete(*tree.get_children())
     self_stocks = self_list_code()
     pegs = peg_list()
@@ -120,6 +121,7 @@ def refersh_config(config):
     dividendMin.set(config.dividendMin)
     dividendMax.set(config.dividendMax)
     assetToEquityMax.set(config.assetToEquityMax)
+    dividendRatio.set(config.dividendRatio)
     self.set(config.self)
 
 
@@ -154,6 +156,10 @@ Entry(frame1, textvariable=dividendMax).grid(row=1, column=3)
 Label(frame1, text="总资产/净资产 Max:", font=("微软雅黑", 14)).grid(row=2, column=0)
 assetToEquityMax = DoubleVar()
 Entry(frame1, textvariable=assetToEquityMax).grid(row=2, column=1)
+
+Label(frame1, text="股息计分权重:", font=("微软雅黑", 14)).grid(row=2, column=2)
+dividendRatio = DoubleVar()
+Entry(frame1, textvariable=dividendRatio).grid(row=2, column=3)
 
 Label(frame1, text="自选股:", font=("微软雅黑", 14)).grid(row=3, column=0)
 self = BooleanVar()
