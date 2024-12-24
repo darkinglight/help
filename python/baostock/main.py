@@ -80,7 +80,11 @@ def show_all():
                assetToEquityMax.get(), dividendRatio.get(), self.get())
     tree.delete(*tree.get_children())
     self_stocks = self_list_code()
-    pegs = peg_list()
+    pegList = peg_list()
+    pegs = []
+    for item in pegList:
+        peg = item.pe / (item.dividendAvg * dividendRatio.get() + item.yoyEquityAvg)
+        pegs.append(item._replace(peg=peg))
     pegs = sorted(pegs, key=attrgetter("peg"))
     # 添加数据到表格
     for item in pegs:

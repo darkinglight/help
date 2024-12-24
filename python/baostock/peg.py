@@ -90,8 +90,8 @@ def get_peg(code, date):
     for profit_item in [profit0, profit1, profit2, profit3]:
         if profit_item is not None:
             latest_profit = profit_item
-    roeAvg = (roeAvg * 100 / profileCount + latest_profit.roe) / 2
-    yoyEquityAvg = (yoyEquityAvg * 100 / profileCount + latest_profit.yoyEquity) / 2
+    roeAvg = (roeAvg * 100 / profileCount + latest_profit.roe * 100) / 2
+    yoyEquityAvg = (yoyEquityAvg * 100 / profileCount + latest_profit.yoyEquity * 100) / 2
     dividendAvg = (roeAvg - yoyEquityAvg) / pb
     realGrowth = dividendAvg + yoyEquityAvg
     peg = pe / (dividendAvg * 1.5 + yoyEquityAvg)
