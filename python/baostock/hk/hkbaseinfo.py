@@ -1,4 +1,4 @@
 import akshare as ak
 
-stock_hk_ggt_components_em_df = ak.stock_hk_ggt_components_em()
-print(stock_hk_ggt_components_em_df)
+stock_financial_hk_analysis_indicator_em_df = ak.stock_financial_hk_analysis_indicator_em(symbol="00700", indicator="报告期")
+print(stock_financial_hk_analysis_indicator_em_df)
