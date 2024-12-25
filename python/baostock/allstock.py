@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 import baostock as bs
+import akshare as ak
 from SqliteTool import SqliteTool
 
 Stock = namedtuple('Stock', ['code', 'name'])
@@ -43,7 +44,25 @@ def init_all_stock():
     bs.logout()
 
 
+def init_hk_stock():
+    # 创建数据表info的SQL语句
+    create_tb_sql = ("create table if not exists hk_stock("
+                     "code text primary key,"
+                     "status int not null,"
+                     "name text);")
+    # 创建对象
+    sqliteTool = SqliteTool()
+    # 创建数据表
+    sqliteTool.create_table(create_tb_sql)
+    # 获取数据
+    df = ak.stock_hk_ggt_components_em()
+    df = df[["代码", "名称"]]
+    for item in df.itertuples():
+        sqliteTool.operate_one('insert into hk_stock values(?,?,?)', (item.代码, 1, item.名称))
+
+
 if __name__ == "__main__":
-    # 查询数据
-    result_many = allstock()
-    print(result_many[100].name)
+    # # 查询数据
+    # result_many = allstock()
+    # print(result_many[100].name)
+    init_hk_stock()
