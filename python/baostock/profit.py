@@ -45,14 +45,13 @@ def profit_from_db(code, year, quarter):
 
 def profit_from_api(code, year, quarter):
     dto = None
-    bs.login()
     yoyEquity = 0
     rs = bs.query_growth_data(code=code, year=year, quarter=quarter)
     if rs.error_code != '0':
         print(code, "get growth error", rs.error_msg)
     while rs.next():
         item = rs.get_row_data()
-        yoyEquity = item[3]
+        yoyEquity = float(item[3])
     rs = bs.query_profit_data(code=code, year=year, quarter=quarter)
     if rs.error_code != '0':
         print(code, "get profit error", rs.error_msg)
@@ -60,13 +59,26 @@ def profit_from_api(code, year, quarter):
     sqliteTool = SqliteTool()
     while rs.next():
         item = rs.get_row_data()
+        try:
+            roeData = float(item[3])
+        except ValueError:
+            roeData = 0
+        try:
+            epsData = float(item[7])
+        except ValueError:
+            epsData = 0
+        try:
+            shareData = float(item[9])
+        except ValueError:
+            shareData = 0
+        dto = Profit(code=item[0], year=year, quarter=quarter, netProfit=float(item[6]),
+                     roe=roeData, eps=epsData, share=shareData,
+                     yoyEquity=yoyEquity)
         sqliteTool.operate_one('insert into profit '
                                '(code,year,quarter,netProfit,roe,eps,share,yoyEquity) '
                                'values(?,?,?,?,?,?,?,?)',
-                               (item[0], year, quarter, item[6], item[3], item[7], item[9], yoyEquity))
-        dto = Profit(code=item[0], year=year, quarter=quarter, netProfit=item[6],
-                     roe=item[3], eps=item[7], share=item[9], yoyEquity=yoyEquity)
-    bs.logout()
+                               (dto.code, dto.year, dto.quarter, dto.netProfit,
+                                dto.roe, dto.eps, dto.share, dto.yoyEquity))
     return dto
 
 

@@ -21,7 +21,6 @@ def priceinfo_from_db(code, date):
     return dto
 
 def priceinfo_from_api(code, date):
-    bs.login()
     rs = bs.query_history_k_data_plus(code,
                                       "date,code,close,peTTM,pbMRQ",
                                       start_date=date,
@@ -33,11 +32,11 @@ def priceinfo_from_api(code, date):
         print(code, rs.error_code, rs.error_msg)
     if rs.next():
         item = rs.get_row_data()
+        result = PriceInfo(code=item[1], date=item[0], price=float(item[2]),
+                           pe=float(item[3]), pb=float(item[4]))
         sqliteTool = SqliteTool()
         sqliteTool.operate_one('insert or replace into priceinfo values(?,?,?,?,?) ',
-                               (item[1], item[0], item[2], item[3], item[4]))
-        result = PriceInfo(code=item[1], date=item[0], price=item[2], pe=item[3], pb=item[4])
-    bs.logout()
+                               (result.code, result.date, result.price, result.pe, result.pb))
     return result
 
 

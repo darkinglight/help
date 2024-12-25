@@ -99,5 +99,7 @@ def dupont_from_api(code, year, quarter):
 
 
 if __name__ == "__main__":
-    init()
-    # print(dupont("sh.600007"))
+    # init()
+    bs.login()
+    print(dupont("sh.600007", 2024, 4))
+    bs.logout()
