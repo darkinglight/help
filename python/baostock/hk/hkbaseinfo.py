@@ -2,7 +2,7 @@ import akshare as ak
 import pandas
 
 from SqliteTool import SqliteTool
-from hkstock import fetch_all_from_db
+import hkstock
 
 # 创建对象
 sqliteTool = SqliteTool()
@@ -85,8 +85,10 @@ def refresh(SECURITY_CODE: str):
 
 
 def refresh_all():
-    rows = fetch_all_from_db()
-    print(rows)
+    rows = hkstock.fetch_all_from_db()
+    for row in rows:
+        refresh(row.code)
+        print(row.name + " fetch finish.")
 
 
 if __name__ == "__main__":

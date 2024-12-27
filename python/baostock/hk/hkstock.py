@@ -1,16 +1,22 @@
+from collections import namedtuple
+
 import akshare as ak
+
 from SqliteTool import SqliteTool
 
 # 创建对象
 sqliteTool = SqliteTool()
+
+HKStock = namedtuple("HKStock", ['code', 'name', 'price'])
 
 
 def init_table():
     # 创建数据表info的SQL语句
     create_tb_sql = ("create table if not exists hk_stock("
                      "code text primary key,"
-                     "price float,"
-                     "name text);")
+                     "name text,"
+                     "price float"
+                     ");")
     # 删除表
     sqliteTool.drop_table("drop table hk_stock;")
     # 创建数据表
@@ -26,15 +32,17 @@ def init_hk_stock():
 
 
 def fetch_one_from_db(code: str):
-    return sqliteTool.query_one(f"select * from hk_stock where code = '{code}'")
+    row = sqliteTool.query_one(f"select * from hk_stock where code = '{code}'")
+    return HKStock(code=row[0], name=row[1], price=row[2])
 
 
 def fetch_all_from_db():
-    return sqliteTool.query_many("select * from hk_stock")
+    rows = sqliteTool.query_many("select * from hk_stock")
+    return [HKStock(code=row[0], name=row[1], price=row[2]) for row in rows]
 
 
 if __name__ == "__main__":
     # init_table()
     # init_hk_stock()
-    print(fetch_one_from_db('00700'))
-    # print(fetch_all_from_db())
+    print(fetch_one_from_db('00700').name)
+    print(fetch_all_from_db())
