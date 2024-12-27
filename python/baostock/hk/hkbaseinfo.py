@@ -2,6 +2,7 @@ import akshare as ak
 import pandas
 
 from SqliteTool import SqliteTool
+from hkstock import fetch_all_from_db
 
 # 创建对象
 sqliteTool = SqliteTool()
@@ -83,6 +84,12 @@ def refresh(SECURITY_CODE: str):
     sqliteTool.operate_many(sql, [tuple(row) for index, row in rows.iterrows()])
 
 
+def refresh_all():
+    rows = fetch_all_from_db()
+    print(rows)
+
+
 if __name__ == "__main__":
     # create_table()
-    refresh("00700")
+    # refresh("00700")
+    refresh_all()
