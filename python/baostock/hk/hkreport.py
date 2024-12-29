@@ -4,6 +4,7 @@ import akshare as ak
 import pandas
 
 from SqliteTool import SqliteTool
+from hk import hkstock
 
 # 创建对象
 sqliteTool = SqliteTool()
@@ -50,12 +51,10 @@ def refresh(stock):
     # "资产负债表", "利润表", "现金流量表"
     rows = fetch_from_api(stock, "资产负债表", "年度")
     rows_cash = fetch_from_api(stock, "现金流量表", "年度")
-    print(rows_cash.columns)
     rows_earning = fetch_from_api(stock, "现金流量表", "年度")
-    print(rows_earning.columns)
     rows = pandas.concat([rows, rows_cash, rows_earning])
     rows.drop_duplicates(inplace=True)
-    rows = rows[rows["REPORT_DATE"] >= "2015-12-31 00:00:00"]
+    rows = rows[rows["REPORT_DATE"] > "2019-12-31 00:00:00"]
     # 根据字典的键动态生成插入语句
     sql = ('INSERT INTO hk_report (' + ', '.join(rows.columns.values) + ') VALUES (' +
            ', '.join(['?'] * rows.shape[1]) + ')')
@@ -65,6 +64,13 @@ def refresh(stock):
     sqliteTool.operate_many(sql, [tuple(row) for index, row in rows.iterrows()])
 
 
+def refresh_all():
+    rows = hkstock.fetch_all_from_db()
+    for row in rows:
+        refresh(row.code)
+        print(row.name + " fetch finish.")
+
+
 if __name__ == "__main__":
     init_table()
-    refresh("00700")
+    refresh_all()
