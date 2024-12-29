@@ -105,5 +105,5 @@ def refresh_all():
 if __name__ == "__main__":
     # create_table()
     # refresh("00700")
-    # refresh_all()
+    refresh_all()
     print(fetch_from_db("00700", "2023-12-31 00:00:00"))
