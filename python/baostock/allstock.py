@@ -45,5 +45,6 @@ def init_all_stock():
 
 if __name__ == "__main__":
     # 查询数据
+    init_all_stock()
     result_many = allstock()
     print(result_many[100].name)
